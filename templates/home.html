@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,36 +32,74 @@
         .btn-like-secondary:hover {
             background-color: #5a6268;
         }
-        body{
-            background-color: #f8f9fa;
+
+        body {
+            background-color: #000080;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Full viewport height */
+            margin: 0;
+        }
+
+        /* Left content styles */
+        .content {
+            background-color: #000080;
+            flex: 1;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            {% comment %} justify-content: center; {% endcomment %}
+        }
+
+        /* Image container */
+        .image-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .image-container img {
+            width: 90%; /* Adjust the image width */
+            height: auto; /* Maintain aspect ratio */
+            max-height: 90%; /* Prevent overflow */
+            object-fit: contain;
+        }
+        h1,h2{
+            font-family: "Lucida Console", "Courier New", monospace;
+        }
+        h1{
+            font-size: 3em;
+        }
+        container
+        {
             display: flex;
             flex-direction: row;
         }
     </style>
 </head>
 <body>
-    <div >
-        <header>
-            <h1>Welcome to HackersBridge!</h1>            
-                <a href="{% url 'host_login' %}" class="btn-like">Host Login</a>
-                <a href="{% url 'competitor_login' %}" class="btn-like">Competitor Login</a>
-                {% comment %} <li><a href="#">About Us</a></li>
-                <li><a href="#">Contact</a></li> {% endcomment %}
-        </header>
-    
-        <main>
-            <h2>Unite with the best minds, showcase your innovation, and solve real-world challenges through dynamic hackathons. Whether you're a participant or a host, HackBridge is your gateway to seamless event management, exciting challenges, and fair evaluations.
-    Start your journey today by logging in as a Competitor or Host, and redefine your hackathon experience!
-            </h2>
-    
-        </main>
-    
-        {% comment %} <footer>
-            <p>&copy; 2025 HackBridge. All rights reserved.</p>
-        </footer> {% endcomment %}
+    <div class="container">
+        <div class="content">
+            <header>
+                <h1>Welcome to HackersBridge!</h1>
+                
+            </header>
+
+            <main>
+                <h2>Unite with the best minds, showcase your innovation, and solve real-world challenges through dynamic hackathons. Whether you're a participant or a host, HackBridge is your gateway to seamless event management, exciting challenges, and fair evaluations. Start your journey today by logging in as a Competitor or Host, and redefine your hackathon experience!</h2>
+            </main>
+        </div>
+
+        <div class="image-container">
+            <img src="{% static 'images/undraw_project_team_lc5a (1).svg' %}" alt="Hackathon">
+        </div>
     </div>
-    <div>
-        <img src=>
+    <div class="links">
+        <a href="{% url 'host_login' %}" class="btn-like">Host Login</a>
+        <a href="{% url 'competitor_login' %}" class="btn-like">Competitor Login</a>
     </div>
 </body>
 </html>
