@@ -16,7 +16,7 @@
             text-decoration: none;
             border: none;
             border-radius: 5px;
-            background-color: #007bff;
+            background-color: rgb(255, 119, 70);
             color: white;
             transition: background-color 0.3s;
         }
@@ -33,63 +33,92 @@
             background-color: #5a6268;
         }
 
+        /* General page layout */
         body {
-            background-color: #000080;
+            background-color:#232d3b;
             display: flex;
             flex-direction: column;
+            align-items: center;
             height: 100vh; /* Full viewport height */
             margin: 0;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* Container for content and image */
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px; /* Limit container width */
+            {% comment %} margin-top: 20px; {% endcomment %}
+            flex: 1;
         }
 
         /* Left content styles */
         .content {
-            background-color: #000080;
             flex: 1;
-            color: white;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            {% comment %} justify-content: center; {% endcomment %}
+            {% comment %} padding: 20px; {% endcomment %}
         }
 
-        /* Image container */
+        h1, h2 {
+            font-family: "Lucida Console", "Courier New", monospace;
+        }
+
+        h1 {
+            font-size: 3em;
+            {% comment %} margin-top: -5px;  {% endcomment %}
+        }
+
+        h2 {
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+
         .image-container {
             flex: 1;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
+            align-items: bottom;
+            padding: 0px;
+            margin-top: 90px; /* Adjust the value to bring the image down */
         }
-
+        
         .image-container img {
-            width: 90%; /* Adjust the image width */
+            width: 100%; /* Adjust the image width */
             height: auto; /* Maintain aspect ratio */
-            max-height: 90%; /* Prevent overflow */
+            max-height: 100%; /* Prevent overflow */
             object-fit: contain;
         }
-        h1,h2{
-            font-family: "Lucida Console", "Courier New", monospace;
-        }
-        h1{
-            font-size: 3em;
-        }
-        container
-        {
+        
+
+        /* Links container */
+        .links {
+            margin: 10px 10px 30px 10px;
             display: flex;
-            flex-direction: row;
+            justify-content: center;
+            gap: 15px; /* Space between buttons */
+        }
+        .heading {
+            color: #ff7746;
+            font-size: 1.5em;
+            margin: 0;
         }
     </style>
 </head>
 <body>
+    <!-- Content and image side by side -->
     <div class="container">
         <div class="content">
-            <header>
-                <h1>Welcome to HackersBridge!</h1>
-                
-            </header>
-
+            <h1>Welcome to <div class="heading"> HackersBridge! </div></h1>
             <main>
-                <h2>Unite with the best minds, showcase your innovation, and solve real-world challenges through dynamic hackathons. Whether you're a participant or a host, HackBridge is your gateway to seamless event management, exciting challenges, and fair evaluations. Start your journey today by logging in as a Competitor or Host, and redefine your hackathon experience!</h2>
+                <h2>
+                    Unite with the best minds, showcase your innovation, and solve real-world challenges through dynamic hackathons. 
+                    Whether you're a participant or a host, HackBridge is your gateway to seamless event management, exciting challenges, 
+                    and fair evaluations. Start your journey today by logging in as a Competitor or Host, and redefine your hackathon experience!
+                </h2>
             </main>
         </div>
 
@@ -97,6 +126,8 @@
             <img src="{% static 'images/undraw_project_team_lc5a (1).svg' %}" alt="Hackathon">
         </div>
     </div>
+
+    <!-- Links below the content and image -->
     <div class="links">
         <a href="{% url 'host_login' %}" class="btn-like">Host Login</a>
         <a href="{% url 'competitor_login' %}" class="btn-like">Competitor Login</a>
