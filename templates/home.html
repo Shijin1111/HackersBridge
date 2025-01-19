@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HackersBridge - Home</title>
     <style>
-        /* Custom button style */
         .btn-like {
             display: inline-block;
             padding: 10px 20px;
@@ -14,53 +13,55 @@
             font-weight: bold;
             text-align: center;
             text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            background-color: rgb(255, 119, 70);
-            color: white;
             transition: background-color 0.3s;
+            background-color: #232d3b;
+            border-radius : 5px;
+            color : rgb(255, 119, 70);
+            border : solid rgb(255, 119, 70);
         }
 
         .btn-like:hover {
-            background-color: #0056b3;
+            border: solid #232d3b;
+            background-color: rgb(255, 119, 70);
+            border-radius: 5px;
+            color: white;
+
+            
         }
 
-        .btn-like-secondary {
+        {% comment %} .btn-like-secondary {
             background-color: #6c757d;
         }
 
         .btn-like-secondary:hover {
             background-color: #5a6268;
-        }
+        } {% endcomment %}
 
-        /* General page layout */
         body {
             background-color:#232d3b;
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh; /* Full viewport height */
+            height: 100vh; 
             margin: 0;
             color: white;
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        /* Container for content and image */
         .container {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
             width: 90%;
-            max-width: 1200px; /* Limit container width */
-            {% comment %} margin-top: 20px; {% endcomment %}
+            margin-Left: 10px;
+            max-width: 1200px; 
             flex: 1;
         }
 
         /* Left content styles */
         .content {
             flex: 1;
-            {% comment %} padding: 20px; {% endcomment %}
         }
 
         h1, h2 {
@@ -69,7 +70,6 @@
 
         h1 {
             font-size: 3em;
-            {% comment %} margin-top: -5px;  {% endcomment %}
         }
 
         h2 {
@@ -83,18 +83,17 @@
             justify-content: center;
             align-items: bottom;
             padding: 0px;
-            margin-top: 90px; /* Adjust the value to bring the image down */
+            margin-top: 190px;
         }
         
         .image-container img {
-            width: 100%; /* Adjust the image width */
-            height: auto; /* Maintain aspect ratio */
-            max-height: 100%; /* Prevent overflow */
+            width: 100%; 
+            height: auto;
+            max-height: 100%;
             object-fit: contain;
         }
         
 
-        /* Links container */
         .links {
             margin: 10px 10px 30px 10px;
             display: flex;
