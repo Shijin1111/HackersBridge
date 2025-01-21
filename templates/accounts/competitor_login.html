@@ -27,16 +27,17 @@
         }
 
         .content {
-            position: absolute;
-            top: 44%;
-            left: 78%;
-            width: 300px;
+            position: absolute; /* Absolute positioning within the .image-container */
+            top: 44%; /* Adjusted to match your desired position */
+            left: 78%; /* Adjusted to match your desired position */
+            transform: translate(-50%, -50%); /* Centers the content at the exact point */
+            width: 25%;
             height: 324px;
-            transform: translate(-50%, -50%);
             text-align: center;
             padding: 20px;
-            border : solid rgb(255, 119, 70);
+            border: solid rgb(255, 119, 70);
             border-radius: 20px;
+            background-color: rgba(0, 0, 0, 0.7); /* Optional: adds contrast for readability */
         }
 
         h2 {
