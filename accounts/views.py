@@ -29,6 +29,12 @@ def competitor_login(request):
             return render(request, 'accounts/competitor_login.html', {'error': 'Invalid credentials or not a competitor.'})
     return render(request, 'accounts/competitor_login.html')
 
+def host_signup(request):
+    return render(request, 'accounts/host_signup.html')
+
+def competitor_signup(request):
+    return render(request, 'accounts/competitor_signup.html')
+
 @login_required
 def host_dashboard(request):
     return render(request, 'accounts/host_dashboard.html')

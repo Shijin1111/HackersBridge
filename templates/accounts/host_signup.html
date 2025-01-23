@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host Sign-Up</title>
+    <style>
+        body {
+            font-family: "Lucida Console", "Courier New", monospace;
+            margin: 40px;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #232d3b;
+            color: white;
+        }
+
+        .content {
+            text-align: center;
+            padding: 20px;
+            border: solid rgb(255, 119, 70);
+            border-radius: 10px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .btn-like {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            background-color: #232d3b;
+            border-radius: 5px;
+            color: rgb(255, 119, 70);
+            border: solid rgb(255, 119, 70);
+            transition: background-color 0.3s, transform 0.2s ease;
+        }
+
+        .btn-like:hover {
+            background-color: rgb(255, 119, 70);
+            color: white;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h2>Host Sign-Up</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+            <button type="submit" class="btn-like">Sign Up</button>
+        </form>
+    </div>
+</body>
+</html>
