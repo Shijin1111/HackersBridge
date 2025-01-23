@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from accounts.models import CustomUser  # Import your custom user model
 
 def home(request):
     return render(request, 'home.html')
@@ -30,9 +31,35 @@ def competitor_login(request):
     return render(request, 'accounts/competitor_login.html')
 
 def host_signup(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        email = request.POST['email']
+        # Create a new user
+        user = CustomUser.objects.create_user(
+            username=username,
+            password=password,
+            email=email,
+            user_type='host'  # Set user_type to 'host'
+        )
+        user.save()
+        return redirect('host_login')
     return render(request, 'accounts/host_signup.html')
 
 def competitor_signup(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        email = request.POST['email']
+        # Create a new user
+        user = CustomUser.objects.create_user(
+            username=username,
+            password=password,
+            email=email,
+            user_type='competitor'  # Set user_type to 'competitor'
+        )
+        user.save()
+        return redirect('competitor_login')
     return render(request, 'accounts/competitor_signup.html')
 
 @login_required

@@ -1,12 +1,111 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Host Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Upper Section */
+        .upper-section {
+            flex: 1;
+            background-color: #232d3b;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .upper-section h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-family: "Lucida Console", "Courier New", monospace;
+        }
+
+        /* Lower Section */
+        .lower-section {
+            flex: 2;
+            display: flex;
+            background-color: white;
+        }
+
+        .menu {
+            flex: 1;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+        }
+
+        .menu ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .menu ul li {
+            margin: 10px 0;
+        }
+
+        .menu ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        .menu ul li a:hover {
+            color: #ff7746;
+        }
+
+        .content {
+            flex: 3;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .content h2 {
+            margin-top: 0;
+            font-size: 1.8em;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome, Host!</h1>
+    <!-- Upper Section -->
+    <div class="upper-section">
+        <h1>Welcome to Host Dashboard</h1>
+    </div>
 
+    <!-- Lower Section -->
+    <div class="lower-section">
+        <!-- Left Menu -->
+        <div class="menu">
+            <h3>Navigation</h3>
+            <ul>
+                <li><a href="#">Create Event</a></li>
+                <li><a href="#">Manage Events</a></li>
+                <li><a href="#">View Participants</a></li>
+                <li><a href="#">Statistics</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </div>
+
+        <!-- Right Content -->
+        <div class="content">
+            <h2>Dashboard Content</h2>
+            <p>
+                This is the main dashboard area. Here you can manage your hackathons, view statistics, and perform other actions.
+            </p>
+        </div>
+    </div>
 </body>
 </html>
