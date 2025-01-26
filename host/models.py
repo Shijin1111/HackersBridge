@@ -9,5 +9,3 @@ class GroupEvent(models.Model):
     last_submission_datetime = models.DateTimeField()
     evaluation_criteria = models.TextField()
 
-    def __str__(self):
-        return self.hackathon_name

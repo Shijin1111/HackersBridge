@@ -97,7 +97,22 @@
             font-size: 1.5em;
             margin: 0;
         }
+        @font-face {
+            font-family: 'Moonwalk'; /* Name your font */
+            src: url('/static/fonts/moon_walk-webfont.woff2') format('woff2'), 
+                 url('/static/fonts/moon_walk-webfont.woff') format('woff'); 
+            font-weight: normal; 
+            font-style: normal;  
+        }
         
+        body {
+            font-family: 'Moonwalk', sans-serif; 
+        }
+        
+        h1 {
+            font-family: 'Moonwalk', sans-serif; 
+            color: #ff7746;
+        }
     </style>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
