@@ -50,6 +50,7 @@
             flex-direction: column;
             align-items: center;
             gap: 15px;
+            width: 100%; 
         }
 
         input {
@@ -60,6 +61,7 @@
             border: none;
             outline: none;
             text-align: center;
+            font-family: 'MyCustomFont', sans-serif;
         }
         .btn-like {
             display: inline-block;
@@ -99,11 +101,12 @@
             font-family: inherit;
         }
     </style>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 <body>
     <div class="image-container">
         <div class="content">
-            <h2>Host Login</h2>
+            <h2>Login</h2>
             {% if error %}
             <p>{{ error }}</p>
             {% endif %}
@@ -113,7 +116,7 @@
                 <input type="password" name="password" placeholder="Password" required>
                 <button type="submit" class="btn-like">Login</button>
             </form>
-            <br><br><br>
+            <br><br>
             <a href="{% url "host_signup" %}" class="btn-signup">Register</a>
         </div>
     </div>

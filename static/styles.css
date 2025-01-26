@@ -1,12 +1,13 @@
 @font-face {
-    font-family: 'MyCustomFont'; /* Name your font */
+    font-family: 'Moonwalk'; /* Name your font */
     src: url('./fonts/moon_walk-webfont.woff2') format('woff2'), /* Modern browsers */
          url('./fonts/moon_walk-webfont.woff') format('woff');   /* Older browsers */
     font-weight: normal; /* Optional: Adjust as needed */
     font-style: normal;  /* Optional: Adjust as needed */
   }
   
-  body,h1 {
+  /* h1 {
     font-family: 'MyCustomFont', sans-serif; 
   }
-  
+   */
+   

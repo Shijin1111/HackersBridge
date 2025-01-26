@@ -27,17 +27,16 @@
         }
 
         .content {
-            position: absolute; /* Absolute positioning within the .image-container */
-            top: 44%; /* Adjusted to match your desired position */
-            left: 78%; /* Adjusted to match your desired position */
-            transform: translate(-50%, -50%); /* Centers the content at the exact point */
-            width: 25%;
+            position: absolute;
+            top: 44%;
+            left: 78%;
+            width: 300px;
             height: 324px;
+            transform: translate(-50%, -50%);
             text-align: center;
             padding: 20px;
-            border: solid rgb(255, 119, 70);
+            border : solid rgb(255, 119, 70);
             border-radius: 20px;
-            background-color: #232d3b;
         }
 
         h2 {
@@ -51,6 +50,7 @@
             flex-direction: column;
             align-items: center;
             gap: 15px;
+            width: 100%; 
         }
 
         input {
@@ -61,6 +61,7 @@
             border: none;
             outline: none;
             text-align: center;
+            font-family: 'MyCustomFont', sans-serif;
         }
         .btn-like {
             display: inline-block;
@@ -100,6 +101,7 @@
             font-family: inherit;
         }
     </style>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 <body>
     <div class="image-container">
@@ -114,8 +116,8 @@
                 <input type="password" name="password" placeholder="Password" required>
                 <button type="submit" class="btn-like">Login</button>
             </form>
-            <br><br><br>
-            <a href={% url "competitor_signup" %} class="btn-signup">Register</a>
+            <br><br>
+            <a href="{% url "competitor_signup" %}" class="btn-signup">Register</a>
         </div>
     </div>
 </body>

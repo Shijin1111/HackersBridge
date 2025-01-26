@@ -6,31 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Host Dashboard</title>
     <style>
+        .btn-like {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s, transform 0.2s ease, box-shadow 0.3s ease;
+            background-color: white;
+            border-radius: 5px;
+            color: rgb(0, 0, 0);
+            border: solid rgb(255, 119, 70);
+        }
+        
+        .btn-like:hover {
+            border: solid #232d3b;
+            background-color: rgb(255, 119, 70);
+            color: black; /* Ensures text color becomes white */
+            transform: scale(1.1);
+        } 
+        
         body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background-color : rgb(0, 0, 0);
+            background-color: #232d3b;
             display: flex;
             flex-direction: column;
+            align-items: center;
             height: 100vh;
+            margin: 0;
+            color: black;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
-       
-
         .lower-section {
-            flex: 2;
             display: flex;
-            background-color:  rgb(255, 119, 70);
+            background-color: #232d3b;
+            width: calc(100% - 40px); /* Subtracting 40px margin on both left and right */
+            margin: 20px; /* 40px margin on all sides */
+            padding: 0; /* Ensure no additional padding is affecting the layout */
         }
 
         .menu {
             flex: 1;
-            background-color: #232d3b;
-            color: white;
+            background-color: rgb(255, 255, 255);
+            color: black;
             padding: 20px;
-            border : solid ;
-            border-radius : 30px;
-            margin: 20px;
+            border-radius: 30px;
+            {% comment %} margin: 20px; {% endcomment %}
+        }
+
+        .menu h3 {
+            margin-top: 0;
+            color: #232d3b;
+            font-size: 1.5em;
         }
 
         .menu ul {
@@ -43,19 +71,20 @@
         }
 
         .menu ul li a {
-            color: white;
+            color: black;
             text-decoration: none;
             font-size: 18px;
             transition: color 0.3s;
         }
 
-        .menu ul li a:hover {
-            color: #ff7746;
-        }
-
         .content {
             flex: 3;
             padding: 20px;
+            margin-left: 20px;
+            background-color: #ffffff;
+            color: black;
+            border-radius: 30px;
+            height: 90%;
             overflow-y: auto;
         }
 
@@ -64,19 +93,46 @@
             font-size: 1.8em;
             color: #333;
         }
+
+        .heading {
+            font-size: 2.5em;
+            color: #ff7746;
+            margin-bottom:10px;
+            margin-top:40px;
+        }
+        @font-face {
+            font-family: 'Moonwalk'; /* Name your font */
+            src: url('/static/fonts/moon_walk-webfont.woff2') format('woff2'), 
+                 url('/static/fonts/moon_walk-webfont.woff') format('woff'); 
+            font-weight: normal; 
+            font-style: normal;  
+        }
+        
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        
+        h1 {
+            font-family: 'Moonwalk', sans-serif; /* Apply Moonwalk font to h1 */
+            font-size: 2.5em;
+            color: #ff7746;
+            margin:0px;
+        }
+        
     </style>
 </head>
 <body>
+    <h1 class="heading">Host your Hackathons here</h1>
 
     <div class="lower-section">
         <div class="menu">
-            <h3>Navigation</h3>
+            <h1 style="color:black;text-align: center;">- options -</h1>
             <ul>
-                <li><a href="#">Create Event</a></li>
-                <li><a href="#">Manage Events</a></li>
-                <li><a href="#">View Participants</a></li>
-                <li><a href="#">Statistics</a></li>
-                <li><a href="#">Settings</a></li>
+                <li><a href="#" class="btn-like">Create individual Event</a></li>
+                <li><a href="#" class="btn-like">Create group Event</a></li>
+                <li><a href="#" class="btn-like">Finished events</a></li>
+                <li><a href="#" class="btn-like">Live events</a></li>
+                <li><a href="#" class="btn-like">Logout</a></li>
             </ul>
         </div>
 
@@ -87,5 +143,6 @@
             </p>
         </div>
     </div>
+
 </body>
 </html>
