@@ -73,7 +73,8 @@
         .menu ul li a {
             color: black;
             text-decoration: none;
-            font-size: 18px;
+            font-size: 15px;
+            font-family: "Lucida Console", "Courier New", monospace;
             transition: color 0.3s;
         }
 
@@ -113,7 +114,7 @@
         }
         
         h1 {
-            font-family: 'Moonwalk', sans-serif; /* Apply Moonwalk font to h1 */
+            font-family: 'Moonwalk', sans-serif; 
             font-size: 2.5em;
             color: #ff7746;
             margin:0px;
@@ -128,11 +129,11 @@
         <div class="menu">
             <h1 style="color:black;text-align: center;">- options -</h1>
             <ul>
-                <li><a href="#" class="btn-like">Create individual Event</a></li>
-                <li><a href="#" class="btn-like">Create group Event</a></li>
-                <li><a href="#" class="btn-like">Finished events</a></li>
-                <li><a href="#" class="btn-like">Live events</a></li>
-                <li><a href="#" class="btn-like">Logout</a></li>
+                <li><a href="{% url "create_group_event" %}" class="btn-like">CREATE INDIVIDUAL EVENT</a></li>
+                <li><a href="#" class="btn-like">CREATE GROUP EVENT</a></li>
+                <li><a href="#" class="btn-like">FINISHED EVENTS</a></li>
+                <li><a href="#" class="btn-like">LIVE EVENTS</a></li>
+                <li><a href="#" class="btn-like">LOGOUT</a></li>
             </ul>
         </div>
 
