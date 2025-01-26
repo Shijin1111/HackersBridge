@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from .forms import GroupEventForm
 from .models import GroupEvent
 
+# @login_required
+def host_dashboard(request):
+    return render(request, 'host/host_dashboard.html')
+
 def create_group_event(request):
     if request.method == "POST":
         print("POST request received.")  # Debugging line
@@ -17,7 +21,7 @@ def create_group_event(request):
                 last_submission_datetime=form.cleaned_data["last_submission_datetime"],
                 evaluation_criteria=form.cleaned_data["evaluation_criteria"],
             )
-            return render(request, "home.html")
+            return render(request, "host/host_dashboard.html")
         else:
             print("Form errors:", form.errors)  # Debugging line for errors
     else:

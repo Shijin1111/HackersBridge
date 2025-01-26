@@ -13,7 +13,7 @@ def host_login(request):
         user = authenticate(request, username=username, password=password)
         if user and user.user_type == 'host':
             login(request, user)
-            return redirect('host_dashboard')
+            return redirect('host:host_dashboard')
         else:
             return render(request, 'accounts/host_login.html', {'error': 'Invalid credentials or not a host.'})
     return render(request, 'accounts/host_login.html')
@@ -62,9 +62,7 @@ def competitor_signup(request):
         return redirect('competitor_login')
     return render(request, 'accounts/competitor_signup.html')
 
-@login_required
-def host_dashboard(request):
-    return render(request, 'accounts/host_dashboard.html')
+
 
 @login_required
 def competitor_dashboard(request):
