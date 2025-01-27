@@ -1,7 +1,14 @@
+from pyexpat.errors import messages
 from django.shortcuts import render, redirect
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from .forms import GroupEventForm
 from .models import GroupEvent
+
+def logout_view(request):
+    logout(request)
+    # messages.success(request, "You have successfully logged out.")
+    return redirect('home')  
 
 @login_required
 def host_dashboard(request):

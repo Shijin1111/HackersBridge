@@ -197,16 +197,17 @@
     </style>
 </head>
 <body>
-    <h1 class="heading">Host your Hackathons here</h1>
+    <h1 class="heading">Show case your talent</h1>
 
     <div class="lower-section">
         <div class="menu">
             <h1 style="color:black;text-align: center;">- options -</h1>
             <ul>
-                <li><a href="{% url "host:create_group_event" %}" class="btn-link">CREATE INDIVIDUAL EVENT</a></li>
-                <li><a href="#" class="btn-link">CREATE GROUP EVENT</a></li>
-                <li><a href="#" class="btn-link">FINISHED EVENTS</a></li>
-                <li><a href="#" class="btn-link">LIVE EVENTS</a></li>
+                <li><a href="{% url "host:create_group_event" %}" class="btn-link">FIND INDIVIDUAL CONTESTS</a></li>
+                <li><a href="#" class="btn-link">FIND GROUP HACKETHONS </a></li>
+                <li><a href="#" class="btn-link">ENROLLED HACKETHONS</a></li>
+                <li><a href="#" class="btn-link">JOIN REQUESTS</a></li>
+                <li><a href="#" class="btn-link">MY TEAMS</a></li>
                 <li><a href="{% url "host:logout" %}" class="btn-link">LOGOUT</a></li>
             </ul>
         </div>
@@ -214,7 +215,7 @@
         <div class="content">
             <h1 style="color:black;text-align: center;">- Your group events -</h1>
         
-            {% if group_events %}
+            {% comment %} {% if group_events %}
                 <div class="cards-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
                     {% for event in group_events %}
                         <div class="card" >
@@ -228,7 +229,7 @@
                                 <p><strong>Frameworks:</strong> {{ event.frameworks }}</p>
                                 <p><strong>Max Team Size:</strong> {{ event.max_team_size }}</p>
                                 <p><strong>Submission Deadline:</strong> {{ event.last_submission_datetime|date:"Y-m-d H:i" }}</p>
-                                {% comment %} <p><strong>creator</strong> {{ event.created_by }}</p> {% endcomment %}
+                                <!-- Button instead of evaluation criteria -->
                                 <div style="text-align: center; margin-top: 16px;">
                                     <a href="#" class="btn-like" >
                                         View Details
@@ -240,7 +241,7 @@
                 </div>
             {% else %}
                 <p>No group events found. <a href="{% url 'host:create_group_event' %}">Create your first event!</a></p>
-            {% endif %}
+            {% endif %} {% endcomment %}
         </div>
         
         

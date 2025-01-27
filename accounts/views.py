@@ -25,7 +25,7 @@ def competitor_login(request):
         user = authenticate(request, username=username, password=password)
         if user and user.user_type == 'competitor':
             login(request, user)
-            return redirect('competitor_dashboard')
+            return redirect('competitor:competitor_dashboard')
         else:
             return render(request, 'accounts/competitor_login.html', {'error': 'Invalid credentials or not a competitor.'})
     return render(request, 'accounts/competitor_login.html')

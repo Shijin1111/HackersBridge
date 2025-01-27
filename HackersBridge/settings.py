@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'host',
+    'competitor',
 ]
 
 MIDDLEWARE = [
