@@ -8,5 +8,6 @@ urlpatterns = [
     path('join-requests/', views.view_join_requests, name='view_join_requests'),
     path('accept-join-request/<int:request_id>/', views.accept_join_request, name='accept_join_request'),
     path('reject-join-request/<int:request_id>/', views.reject_join_request, name='reject_join_request'),
+    path('find_group_events/',views.find_group_events,name='find_group_events'),
     path('logout/', views.logout_view, name='logout'),
 ]

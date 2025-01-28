@@ -119,3 +119,8 @@ def reject_join_request(request, request_id):
 
     messages.success(request, f"Join request rejected for {join_request.team.name}.")
     return redirect('competitor:my_teams')
+
+from host.models import GroupEvent
+def find_group_events(request):
+    group_events = GroupEvent.objects.all()
+    return render(request,'competitor/find_group_events.html',{"group_events":group_events})

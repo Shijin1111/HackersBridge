@@ -204,7 +204,7 @@
             <h1 style="color:black;text-align: center;">- options -</h1>
             <ul>
                 <li><a href="#" class="btn-link">FIND INDIVIDUAL CONTESTS</a></li>
-                <li><a href="#" class="btn-link">FIND GROUP HACKETHONS </a></li>
+                <li><a href="{% url 'competitor:find_group_events' %}" class="btn-link">FIND GROUP HACKETHONS</a></li>
                 <li><a href="#" class="btn-link">ENROLLED HACKETHONS</a></li>
                 <li><a href="{% url 'competitor:view_join_requests' %}" class="btn-link">JOIN REQUESTS</a></li>
                 <li><a href="{% url "competitor:my_teams" %}" class="btn-link">MY TEAMS</a></li>

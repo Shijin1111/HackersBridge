@@ -1,0 +1,34 @@
+{% extends "competitor/competitor_dashboard.html" %}
+{% block right_div %}
+{% if group_events %}
+                <div class="cards-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+                    {% for event in group_events %}
+                        <div class="card" >
+                            <!-- Hackathon Name as a separate box -->
+                            <div class="hackathon_name">
+                                {{ event.hackathon_name }}
+                            </div>
+                            <div style="padding: 16px;">
+                                <p><strong>Organization:</strong> {{ event.organization }}</p>
+                                <p><strong>Theme:</strong> {{ event.theme }}</p>
+                                <p><strong>Frameworks:</strong> {{ event.frameworks }}</p>
+                                <p><strong>Max Team Size:</strong> {{ event.max_team_size }}</p>
+                                <p><strong>Submission Deadline:</strong> {{ event.last_submission_datetime|date:"Y-m-d H:i" }}</p>
+                                {% comment %} <p><strong>creator</strong> {{ event.created_by }}</p> {% endcomment %}
+                                <div style="text-align: center; margin-top: 16px;">
+                                    <a href="#" class="btn-like" >
+                                        ATTEND
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No group events found. <a href="{% url 'host:create_group_event' %}">Create your first event!</a></p>
+            {% endif %}
+
+{% endblock right_div %}
+
+
+
