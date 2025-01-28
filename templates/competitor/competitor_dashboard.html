@@ -45,7 +45,7 @@
             border: solid #232d3b;
             background-color: white
             color: black; /* Ensures text color becomes white */
-            transform: scale(1.1);
+            transform: scale(1.01);
         } 
         
         body {
@@ -203,16 +203,17 @@
         <div class="menu">
             <h1 style="color:black;text-align: center;">- options -</h1>
             <ul>
-                <li><a href="{% url "host:create_group_event" %}" class="btn-link">FIND INDIVIDUAL CONTESTS</a></li>
+                <li><a href="#" class="btn-link">FIND INDIVIDUAL CONTESTS</a></li>
                 <li><a href="#" class="btn-link">FIND GROUP HACKETHONS </a></li>
                 <li><a href="#" class="btn-link">ENROLLED HACKETHONS</a></li>
                 <li><a href="#" class="btn-link">JOIN REQUESTS</a></li>
-                <li><a href="#" class="btn-link">MY TEAMS</a></li>
-                <li><a href="{% url "host:logout" %}" class="btn-link">LOGOUT</a></li>
+                <li><a href="{% url "competitor:my_teams" %}" class="btn-link">MY TEAMS</a></li>
+                <li><a href="{% url "competitor:logout" %}" class="btn-link">LOGOUT</a></li>
             </ul>
         </div>
-
+        
         <div class="content">
+        {% block right_div %}
             <h1 style="color:black;text-align: center;">- Your group events -</h1>
         
             {% comment %} {% if group_events %}
@@ -242,6 +243,7 @@
             {% else %}
                 <p>No group events found. <a href="{% url 'host:create_group_event' %}">Create your first event!</a></p>
             {% endif %} {% endcomment %}
+        {% endblock right_div %}
         </div>
         
         
