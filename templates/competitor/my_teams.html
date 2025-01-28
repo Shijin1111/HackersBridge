@@ -3,13 +3,25 @@
 {% block right_div %}
 
 <h1 style="color:black;text-align: center;">- my teams -</h1>
-<div style="text-align: center; margin-top: 16px;width:100%;">
-    <a href="{% url "competitor:create_team" %}" class="btn-like" style="display:block;">
-        CREATE NEW TEAM 
+<div style="text-align: center; margin-top: 16px; width: 100%;">
+    <a href="{% url "competitor:create_team" %}" class="btn-like" style="display: block;">
+        CREATE NEW TEAM
     </a>
 </div>   
 
+<div style="margin-top: 20px;">
+    {% if teams %}
+        <ul style="list-style: none; padding: 0;">
+            {% for team in teams %}
+                <li style="margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    <strong>{{ team.name }}</strong> <br>
+                    <small>Admin: {{ team.team_admin }}</small>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p style="text-align: center; color: gray;">You are not a member of any teams yet.</p>
+    {% endif %}
+</div>
+
 {% endblock right_div %}
-
-
-

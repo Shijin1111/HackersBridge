@@ -7,7 +7,6 @@ from .models import GroupEvent
 
 def logout_view(request):
     logout(request)
-    # messages.success(request, "You have successfully logged out.")
     return redirect('home')  
 
 @login_required
