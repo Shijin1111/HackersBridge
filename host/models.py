@@ -11,3 +11,11 @@ class GroupEvent(models.Model):
     evaluation_criteria = models.TextField()
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="group_events")
 
+
+class TeamEnrollment(models.Model):
+    event = models.ForeignKey('GroupEvent', on_delete=models.CASCADE, related_name='enrollments')
+    team = models.ForeignKey('competitor.Team', on_delete=models.CASCADE, related_name='enrolled_events')
+    enrolled_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.team.name} enrolled in {self.event.hackathon_name}"

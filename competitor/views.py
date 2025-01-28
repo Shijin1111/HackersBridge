@@ -124,3 +124,29 @@ from host.models import GroupEvent
 def find_group_events(request):
     group_events = GroupEvent.objects.all()
     return render(request,'competitor/find_group_events.html',{"group_events":group_events})
+
+
+# competitor/views.py
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from host.models import GroupEvent, TeamEnrollment
+from .models import Team
+
+def enroll_in_event(request, event_id):
+    event = get_object_or_404(GroupEvent, id=event_id)
+    user_teams = Team.objects.filter(team_admin=request.user)  # Teams created by the user
+
+    if request.method == 'POST':
+        team_id = request.POST.get('team_id')
+        team = get_object_or_404(Team, id=team_id, team_admin=request.user)
+        
+        # Check if the team is already enrolled
+        if TeamEnrollment.objects.filter(event=event, team=team).exists():
+            messages.error(request, f"{team.name} is already enrolled in this event!")
+        else:
+            # Enroll the team
+            TeamEnrollment.objects.create(event=event, team=team)
+            messages.success(request, f"{team.name} successfully enrolled in {event.hackathon_name}!")
+        return redirect('competitor:find_group_events')
+
+    return render(request, 'competitor/enroll_in_event.html', {'event': event, 'user_teams': user_teams})

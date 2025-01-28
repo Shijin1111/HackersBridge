@@ -16,9 +16,9 @@
                                 <p><strong>Submission Deadline:</strong> {{ event.last_submission_datetime|date:"Y-m-d H:i" }}</p>
                                 {% comment %} <p><strong>creator</strong> {{ event.created_by }}</p> {% endcomment %}
                                 <div style="text-align: center; margin-top: 16px;">
-                                    <a href="#" class="btn-like" >
-                                        ATTEND
-                                    </a>
+                                    <a href="{% url 'competitor:enroll_in_event' event.id %}" class="btn-like">
+                                        ENROLL
+                                    </a>                                    
                                 </div>
                             </div>
                         </div>
