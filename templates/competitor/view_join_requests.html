@@ -4,9 +4,9 @@
     <h1 style="color:black;text-align: center;">- Join Requests -</h1>
     <div style="text-align: center; margin-top: 16px;width:100%;">
         {% if pending_requests %}
-            <ul>
+            <ul style="list-style-type: none;">
                 {% for request in pending_requests %}
-                    <li>
+                    <li style="border:solid;border-radius:6px;margin:10px;padding:8px;background-color:white;">
                         <h2><strong>{{ request.team.name }}</strong> - Join Request from {{ request.user.username }}</h2>
                         <a href="{% url 'competitor:accept_join_request' request.id %}" class="btn-link">Accept</a>
                         <a href="{% url 'competitor:reject_join_request' request.id %}" class="btn-link">Reject</a>
