@@ -10,5 +10,6 @@ urlpatterns = [
     path('reject-join-request/<int:request_id>/', views.reject_join_request, name='reject_join_request'),
     path('find_group_events/',views.find_group_events,name='find_group_events'),
     path('enroll_in_event/<int:event_id>/', views.enroll_in_event, name='enroll_in_event'),
+    path('enrolled_hackathons/', views.enrolled_hackathons, name='enrolled_hackathons'),
     path('logout/', views.logout_view, name='logout'),
 ]

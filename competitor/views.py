@@ -150,3 +150,13 @@ def enroll_in_event(request, event_id):
         return redirect('competitor:find_group_events')
 
     return render(request, 'competitor/enroll_in_event.html', {'event': event, 'user_teams': user_teams})
+
+
+def enrolled_hackathons(request):
+    # Get all teams the user is part of (either as team_admin or member)
+    user_teams = Team.objects.filter(members=request.user) | Team.objects.filter(team_admin=request.user)
+    
+    # Get all enrollments for these teams
+    enrolled_events = TeamEnrollment.objects.filter(team__in=user_teams).select_related('event')
+    
+    return render(request, 'competitor/enrolled_hackathons.html', {'enrolled_events': enrolled_events})

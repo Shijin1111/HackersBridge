@@ -1,0 +1,35 @@
+{% extends "competitor/competitor_dashboard.html" %}
+
+{% block right_div %}
+<h1 style="color:black; text-align: center;">- Enrolled  Hackathons -</h1>
+
+{% if enrolled_events %}
+    <div class="cards-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+        {% for enrollment in enrolled_events %}
+            <div class="card">
+                <!-- Hackathon Name as a separate box -->
+                <div class="hackathon_name">
+                    {{ enrollment.event.hackathon_name }}
+                </div>
+                <div style="padding: 16px;">
+                    <p><strong>Organization:</strong> {{ enrollment.event.organization }}</p>
+                    <p><strong>Theme:</strong> {{ enrollment.event.theme }}</p>
+                    <p><strong>Frameworks:</strong> {{ enrollment.event.frameworks }}</p>
+                    <p><strong>Max Team Size:</strong> {{ enrollment.event.max_team_size }}</p>
+                    <p><strong>Submission Deadline:</strong> {{ enrollment.event.last_submission_datetime|date:"Y-m-d H:i" }}</p>
+                    <p><strong>Team Name:</strong> {{ enrollment.team.name }}</p>
+                    <p><strong>Role:</strong> 
+                        {% if enrollment.team.team_admin == request.user %}
+                            Team Admin
+                        {% else %}
+                            Team Member
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p style="text-align: center; margin-top: 16px;">You are not enrolled in any hackathons yet.</p>
+{% endif %}
+{% endblock right_div %}
