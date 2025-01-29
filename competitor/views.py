@@ -20,6 +20,7 @@ def my_teams(request):
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from .models import Team, JoinRequest
+from django.contrib.auth.models import User
 
 def send_join_request(request, team_id, user_id):
     team = get_object_or_404(Team, id=team_id)
@@ -120,13 +121,11 @@ def reject_join_request(request, request_id):
     messages.success(request, f"Join request rejected for {join_request.team.name}.")
     return redirect('competitor:my_teams')
 
-from host.models import GroupEvent
 def find_group_events(request):
     group_events = GroupEvent.objects.all()
     return render(request,'competitor/find_group_events.html',{"group_events":group_events})
 
 
-# competitor/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from host.models import GroupEvent, TeamEnrollment
@@ -160,3 +159,52 @@ def enrolled_hackathons(request):
     enrolled_events = TeamEnrollment.objects.filter(team__in=user_teams).select_related('event')
     
     return render(request, 'competitor/enrolled_hackathons.html', {'enrolled_events': enrolled_events})
+
+
+def event_details(request, event_id, team_id):
+    event = get_object_or_404(GroupEvent, id=event_id)
+    team = get_object_or_404(Team, id=team_id)
+
+    # Ensure the team is actually enrolled in the event
+    enrollment = TeamEnrollment.objects.filter(event=event, team=team).first()
+    if not enrollment:
+        return render(request, 'competitor/not_allowed.html', {"message": "You are not enrolled in this event."})
+
+    return render(request, 'competitor/event_details.html', {'event': event, 'team': team})
+
+
+# views.py in competitor app
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from host.models import ProjectSubmission, File, GroupEvent
+from competitor.models import Team
+from django.core.files.storage import default_storage
+
+@login_required
+def submit_project(request, event_id):
+    event = GroupEvent.objects.get(id=event_id)
+    team = Team.objects.filter(members=request.user).first()
+    if not team:
+        return redirect('competitor:my_teams')
+
+    if request.method == 'POST':
+        live_link = request.POST.get('live_link', '').strip()
+        uploaded_files = request.FILES.getlist('project_files')
+
+        project_submission, created = ProjectSubmission.objects.get_or_create(
+            event=event, team=team, submitted_by=request.user
+        )
+        project_submission.live_link = live_link
+        project_submission.save()
+
+        for file in uploaded_files:
+            file_instance = File.objects.create(file=file)
+            project_submission.files.add(file_instance)
+
+        return redirect('competitor:enrolled_hackathons')
+
+    return render(request, 'competitor/submit_project.html', {'event': event, 'team': team})
+
+

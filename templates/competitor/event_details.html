@@ -1,0 +1,41 @@
+{% extends "competitor/competitor_dashboard.html" %}
+
+{% block right_div %}
+<h1 style="color:black; text-align: center;">{{ event.hackathon_name }}</h1>
+
+<div class="card" style="background-color: #1e1e1e; color: white; margin: 16px;">
+    <div style="padding: 16px; text-align: center; color: #ff7746;">
+        <h2 style="color:#ff7746;"><strong>Theme:</strong> {{ event.theme }}</h2>
+        <p><strong>Organization:</strong> {{ event.organization }}</p>
+        <p><strong>Frameworks:</strong> {{ event.frameworks }}</p>
+        <p><strong>Max Team Size:</strong> {{ event.max_team_size }}</p>
+        <p><strong>Deadline:</strong> {{ event.last_submission_datetime|date:"Y-m-d H:i" }}</p>
+        <p style="white-space: pre-wrap; text-align: left;color:white;"><strong>Evaluation Criteria:</strong> {{ event.evaluation_criteria }}</p>
+
+        <form method="POST" enctype="multipart/form-data" action="{% url 'competitor:submit_project' event.id %}">
+            {% csrf_token %}
+            <table style="width: 100%; margin-top: 20px; color: white; text-align: center;font-size: 1.1rem;">
+                <tr style="color: #ff7746;">
+                    <td colspan="2" style="padding: 8px; text-align: center;"><strong>Enrolled Team: {{ team.name }}</strong></td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; width: 50%;text-align: right;"><strong>Upload Project :</strong></td>
+                    <td style="padding: 8px; text-align: left;">
+                        <input type="file" name="project_files" id="project_files" multiple webkitdirectory mozdirectory style="text-align: left;font-size: 1.01rem;">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;text-align: right;"><strong>Submit Live Link :</strong></td>
+                    <td style="padding: 8px; text-align: left;">
+                        <input type="url" name="live_link" id="live_link" placeholder="https://your-live-project-link.com" style="text-align: left;font-size: 1.01rem;">
+                    </td>
+                </tr>
+            </table>
+
+            <div style="text-align: center; margin-top: 16px;">
+                <button type="submit" class="btn-like">Submit Project</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

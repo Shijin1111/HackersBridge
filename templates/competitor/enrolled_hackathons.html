@@ -12,12 +12,12 @@
                     {{ enrollment.event.hackathon_name }}
                 </div>
                 <div style="padding: 16px;">
-                    <p><strong>Organization:</strong> {{ enrollment.event.organization }}</p>
+                    {% comment %} <p><strong>Organization:</strong> {{ enrollment.event.organization }}</p>
                     <p><strong>Theme:</strong> {{ enrollment.event.theme }}</p>
                     <p><strong>Frameworks:</strong> {{ enrollment.event.frameworks }}</p>
-                    <p><strong>Max Team Size:</strong> {{ enrollment.event.max_team_size }}</p>
-                    <p><strong>Submission Deadline:</strong> {{ enrollment.event.last_submission_datetime|date:"Y-m-d H:i" }}</p>
-                    <p><strong>Team Name:</strong> {{ enrollment.team.name }}</p>
+                    <p><strong>Max Team Size:</strong> {{ enrollment.event.max_team_size }}</p> {% endcomment %}
+                    <p><strong>Enrolled Team:</strong> {{ enrollment.team.name }}</p>
+                    <p><strong>Deadline:</strong> {{ enrollment.event.last_submission_datetime|date:"Y-m-d H:i" }}</p>
                     <p><strong>Role:</strong> 
                         {% if enrollment.team.team_admin == request.user %}
                             Team Admin
@@ -25,6 +25,11 @@
                             Team Member
                         {% endif %}
                     </p>
+                    <div style="text-align: center; margin-top: 16px;">
+                        <a href="{% url 'competitor:event_details' enrollment.event.id enrollment.team.id %}" class="btn-like">
+                            ENTER
+                        </a>
+                    </div>
                 </div>
             </div>
         {% endfor %}
