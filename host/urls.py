@@ -1,5 +1,8 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 app_name = 'host'
 urlpatterns = [
     path('dashboard/', views.host_dashboard, name='host_dashboard'),
@@ -9,3 +12,6 @@ urlpatterns = [
     path('event/<int:event_id>/submissions/', views.view_submissions, name='view_submissions'),
     path('logout/', views.logout_view, name='logout'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

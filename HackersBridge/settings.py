@@ -114,6 +114,13 @@ TIME_ZONE = 'Asia/Kolkata'
 USE_TZ = True
 
 
+import os
+
+# Other settings...
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 
 # Static files (CSS, JavaScript, Images)

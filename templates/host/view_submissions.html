@@ -7,12 +7,10 @@
     <div class="cards-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
         {% for submission in submissions %}
             <div class="card">
-                <div class="team_name">
+                <div class="hackathon_name">
                     <strong>Team:</strong> {{ submission.team.name }}
                 </div>
                 <div style="padding: 16px; text-align: center;">
-                    <p><strong>Submitted By:</strong> {{ submission.submitted_by.username }}</p>
-                    <p><strong>Submitted At:</strong> {{ submission.submitted_at }}</p>
                     <p><strong>Live Link:</strong> 
                         {% if submission.live_link %}
                             <a href="{{ submission.live_link }}" target="_blank">{{ submission.live_link }}</a>
@@ -20,8 +18,16 @@
                             No live link provided.
                         {% endif %}
                     </p>
+
                     <div style="text-align: center; margin-top: 16px;">
-                        <a href="#" class="btn-like">View Files</a>
+                        <a href="#" class="btn-like" data-submission-id="{{ submission.id }}" onclick="showFiles({{ submission.id }})">View Files</a>
+                    </div>
+
+                    <!-- Hidden Files Section -->
+                    <div id="files-container-{{ submission.id }}" style="display:block; margin-top: 16px;">
+                        {% for file in submission.files.all %}
+                            <p><a href="{{ file.file.url }}" download>{{ file.file.name }}</a></p>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -31,3 +37,14 @@
     <p style="text-align: center;">No submissions yet.</p>
 {% endif %}
 {% endblock %}
+
+<script>
+    function showFiles(submissionId) {
+        const filesContainer = document.getElementById('files-container-' + submissionId);
+        if (filesContainer.style.display === 'none') {
+            filesContainer.style.display = 'block';
+        } else {
+            filesContainer.style.display = 'none';
+        }
+    }
+</script>
