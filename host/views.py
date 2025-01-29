@@ -37,5 +37,9 @@ def create_group_event(request):
     return render(request, "host/create_group_event.html", {"form": form})
 
 def finished_group_events(request):
-    finished_events = GroupEvent.objects.filter(last_submission_datetime__lt=now())
+    finished_events = GroupEvent.objects.filter(created_by=request.user,last_submission_datetime__lt=now())
     return render(request, 'host/finished_group_events.html', {'finished_events': finished_events})
+
+def live_events(request):
+    live_events = GroupEvent.objects.filter(created_by=request.user, last_submission_datetime__gte=now())
+    return render(request, 'host/live_events.html', {'live_events': live_events})
