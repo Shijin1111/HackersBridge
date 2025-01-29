@@ -6,5 +6,6 @@ urlpatterns = [
     path("create-group-event/", views.create_group_event, name="create_group_event"),
     path('finished_group_events/', views.finished_group_events, name='finished_group_events'),
     path('live-events/', views.live_events, name='live_events'),
+    path('event/<int:event_id>/submissions/', views.view_submissions, name='view_submissions'),
     path('logout/', views.logout_view, name='logout'),
 ]

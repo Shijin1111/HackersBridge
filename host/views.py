@@ -1,10 +1,10 @@
 from pyexpat.errors import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import logout
 from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 from .forms import GroupEventForm
-from .models import GroupEvent
+from .models import GroupEvent,ProjectSubmission
 
 def logout_view(request):
     logout(request)
@@ -12,8 +12,11 @@ def logout_view(request):
 
 @login_required
 def host_dashboard(request):
-    user_group_events = GroupEvent.objects.filter(created_by=request.user)  # Fetch events by logged-in user
+    user_group_events = GroupEvent.objects.filter(created_by=request.user) 
+    print(now()) 
     return render(request, "host/host_dashboard.html", {"group_events": user_group_events})
+
+from django.utils import timezone
 
 def create_group_event(request):
     if request.method == "POST":
@@ -36,10 +39,35 @@ def create_group_event(request):
         form = GroupEventForm()
     return render(request, "host/create_group_event.html", {"form": form})
 
+from django.utils import timezone
+
 def finished_group_events(request):
-    finished_events = GroupEvent.objects.filter(created_by=request.user,last_submission_datetime__lt=now())
+    # Get the current time in IST by converting UTC to local time
+    current_time_ist = timezone.localtime(timezone.now())
+    
+    finished_events = GroupEvent.objects.filter(
+        created_by=request.user,
+        last_submission_datetime__lt=current_time_ist  # Compare with IST
+    )
     return render(request, 'host/finished_group_events.html', {'finished_events': finished_events})
 
 def live_events(request):
-    live_events = GroupEvent.objects.filter(created_by=request.user, last_submission_datetime__gte=now())
+    # Get the current time in IST by converting UTC to local time
+    current_time_ist = timezone.localtime(timezone.now())
+    
+    live_events = GroupEvent.objects.filter(
+        created_by=request.user,
+        last_submission_datetime__gte=current_time_ist  # Compare with IST
+    )
     return render(request, 'host/live_events.html', {'live_events': live_events})
+
+
+@login_required
+def view_submissions(request, event_id):
+    event = get_object_or_404(GroupEvent, id=event_id)
+    submissions = ProjectSubmission.objects.filter(event=event)
+
+    return render(request, 'host/view_submissions.html', {
+        'event': event,
+        'submissions': submissions
+    })

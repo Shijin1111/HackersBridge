@@ -1,0 +1,33 @@
+{% extends "host/host_dashboard.html" %}
+
+{% block right_div %}
+<h1 style="color: black; text-align: center;">Submissions for {{ event.hackathon_name }}</h1>
+
+{% if submissions %}
+    <div class="cards-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+        {% for submission in submissions %}
+            <div class="card">
+                <div class="team_name">
+                    <strong>Team:</strong> {{ submission.team.name }}
+                </div>
+                <div style="padding: 16px; text-align: center;">
+                    <p><strong>Submitted By:</strong> {{ submission.submitted_by.username }}</p>
+                    <p><strong>Submitted At:</strong> {{ submission.submitted_at }}</p>
+                    <p><strong>Live Link:</strong> 
+                        {% if submission.live_link %}
+                            <a href="{{ submission.live_link }}" target="_blank">{{ submission.live_link }}</a>
+                        {% else %}
+                            No live link provided.
+                        {% endif %}
+                    </p>
+                    <div style="text-align: center; margin-top: 16px;">
+                        <a href="#" class="btn-like">View Files</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p style="text-align: center;">No submissions yet.</p>
+{% endif %}
+{% endblock %}
