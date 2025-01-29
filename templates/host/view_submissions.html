@@ -20,14 +20,7 @@
                     </p>
 
                     <div style="text-align: center; margin-top: 16px;">
-                        <a href="#" class="btn-like" data-submission-id="{{ submission.id }}" onclick="showFiles({{ submission.id }})">View Files</a>
-                    </div>
-
-                    <!-- Hidden Files Section -->
-                    <div id="files-container-{{ submission.id }}" style="display:block; margin-top: 16px;">
-                        {% for file in submission.files.all %}
-                            <p><a href="{{ file.file.url }}" download>{{ file.file.name }}</a></p>
-                        {% endfor %}
+                        <a href="{% url 'host:download_file' submission.files.first.id %}" class="btn-like">Download Files</a>
                     </div>
                 </div>
             </div>
@@ -37,14 +30,3 @@
     <p style="text-align: center;">No submissions yet.</p>
 {% endif %}
 {% endblock %}
-
-<script>
-    function showFiles(submissionId) {
-        const filesContainer = document.getElementById('files-container-' + submissionId);
-        if (filesContainer.style.display === 'none') {
-            filesContainer.style.display = 'block';
-        } else {
-            filesContainer.style.display = 'none';
-        }
-    }
-</script>

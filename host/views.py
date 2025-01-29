@@ -71,3 +71,16 @@ def view_submissions(request, event_id):
         'event': event,
         'submissions': submissions
     })
+
+from django.shortcuts import get_object_or_404
+from django.http import FileResponse
+from .models import File
+
+def download_file(request, file_id):
+    # Retrieve the file instance by its ID
+    file_instance = get_object_or_404(File, id=file_id)
+
+    # Open the file and return it as a response for download
+    response = FileResponse(open(file_instance.file.path, 'rb'))
+    response['Content-Disposition'] = f'attachment; filename="{file_instance.file.name}"'
+    return response

@@ -113,14 +113,12 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Kolkata'  
 USE_TZ = True
 
-
+# settings.py
 import os
 
-# Other settings...
-
+BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 
 # Static files (CSS, JavaScript, Images)

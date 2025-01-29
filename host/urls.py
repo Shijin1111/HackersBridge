@@ -10,6 +10,7 @@ urlpatterns = [
     path('finished_group_events/', views.finished_group_events, name='finished_group_events'),
     path('live-events/', views.live_events, name='live_events'),
     path('event/<int:event_id>/submissions/', views.view_submissions, name='view_submissions'),
+    path('download/<int:file_id>/', views.download_file, name='download_file'),
     path('logout/', views.logout_view, name='logout'),
 ]
 
