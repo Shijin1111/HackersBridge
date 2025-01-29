@@ -1,0 +1,42 @@
+{% extends "host/host_dashboard.html" %}
+
+{% block right_div %}
+    <h1 style="color: black; text-align: center;">- Finished Hackathons -</h1>
+    {% if finished_events %}
+        <div class="cards-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+            {% for event in finished_events %}
+                <div class="card">
+                    <div class="hackathon_name">
+                        {{ event.hackathon_name }}
+                    </div>
+                    <div style="padding: 16px; text-align: center;">
+                        <table style="margin: 0 auto; text-align: left; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 8px;"><strong>Organization:</strong></td>
+                                <td style="padding: 8px;">{{ event.organization }}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px;"><strong>Theme:</strong></td>
+                                <td style="padding: 8px;">{{ event.theme }}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px;"><strong>Frameworks:</strong></td>
+                                <td style="padding: 8px;">{{ event.frameworks }}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px;"><strong>Max Team Size:</strong></td>
+                                <td style="padding: 8px;">{{ event.max_team_size }}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px;"><strong>Deadline:</strong></td>
+                                <td style="padding: 8px;">{{ event.last_submission_datetime|date:"Y-m-d H:i" }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="text-align: center;">No finished hackathons yet.</p>
+    {% endif %}
+{% endblock %}

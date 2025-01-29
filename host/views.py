@@ -1,6 +1,7 @@
 from pyexpat.errors import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
+from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 from .forms import GroupEventForm
 from .models import GroupEvent
@@ -33,5 +34,8 @@ def create_group_event(request):
             print("Form errors:", form.errors)
     else:
         form = GroupEventForm()
-
     return render(request, "host/create_group_event.html", {"form": form})
+
+def finished_group_events(request):
+    finished_events = GroupEvent.objects.filter(last_submission_datetime__lt=now())
+    return render(request, 'host/finished_group_events.html', {'finished_events': finished_events})

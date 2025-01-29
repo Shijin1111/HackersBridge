@@ -203,15 +203,16 @@
         <div class="menu">
             <h1 style="color:black;text-align: center;">- options -</h1>
             <ul>
-                <li><a href="{% url "host:create_group_event" %}" class="btn-link">CREATE INDIVIDUAL EVENT</a></li>
-                <li><a href="#" class="btn-link">CREATE GROUP EVENT</a></li>
-                <li><a href="#" class="btn-link">FINISHED EVENTS</a></li>
+                <li><a href="#" class="btn-link">CREATE INDIVIDUAL EVENT</a></li>
+                <li><a href="{% url "host:create_group_event" %}" class="btn-link">CREATE GROUP EVENT</a></li>
+                <li><a href="{% url "host:finished_group_events" %}" class="btn-link">FINISHED EVENTS</a></li>
                 <li><a href="#" class="btn-link">LIVE EVENTS</a></li>
                 <li><a href="{% url "host:logout" %}" class="btn-link">LOGOUT</a></li>
             </ul>
         </div>
 
         <div class="content">
+            {% block right_div %}
             <h1 style="color:black;text-align: center;">- Your group events -</h1>
         
             {% if group_events %}
@@ -241,6 +242,7 @@
             {% else %}
                 <p>No group events found. <a href="{% url 'host:create_group_event' %}">Create your first event!</a></p>
             {% endif %}
+        {% endblock right_div %}
         </div>
         
         
