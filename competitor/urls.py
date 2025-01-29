@@ -12,7 +12,6 @@ urlpatterns = [
     path('enroll_in_event/<int:event_id>/', views.enroll_in_event, name='enroll_in_event'),
     path('enrolled_hackathons/', views.enrolled_hackathons, name='enrolled_hackathons'),
     path('event/<int:event_id>/team/<int:team_id>/', views.event_details, name='event_details'),
-    path('submission_success_url/', views.submission_success, name='submission_success_url'),
     path('event/<int:event_id>/submit_project/', views.submit_project, name='submit_project'),
     path('logout/', views.logout_view, name='logout'),
 ]
