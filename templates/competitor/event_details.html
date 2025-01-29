@@ -19,9 +19,9 @@
                     <td colspan="2" style="padding: 8px; text-align: center;"><strong>Enrolled Team: {{ team.name }}</strong></td>
                 </tr>
                 <tr>
-                    <td style="padding: 8px; width: 50%;text-align: right;"><strong>Upload Project :</strong></td>
+                    <td style="padding: 8px; width: 50%;text-align: right;"><strong>Upload Project (ZIP file):</strong></td>
                     <td style="padding: 8px; text-align: left;">
-                        <input type="file" name="project_files" id="project_files" multiple webkitdirectory mozdirectory style="text-align: left;font-size: 1.01rem;">
+                        <input type="file" name="project_files" id="project_files" accept=".zip" required style="text-align: left;font-size: 1.01rem;">
                     </td>
                 </tr>
                 <tr>
@@ -31,11 +31,11 @@
                     </td>
                 </tr>
             </table>
-
+        
             <div style="text-align: center; margin-top: 16px;">
                 <button type="submit" class="btn-like">Submit Project</button>
             </div>
         </form>
-    </div>
+    </div>        
 </div>
 {% endblock %}

@@ -186,25 +186,30 @@ from django.core.files.storage import default_storage
 def submit_project(request, event_id):
     event = GroupEvent.objects.get(id=event_id)
     team = Team.objects.filter(members=request.user).first()
+
     if not team:
         return redirect('competitor:my_teams')
 
     if request.method == 'POST':
         live_link = request.POST.get('live_link', '').strip()
-        uploaded_files = request.FILES.getlist('project_files')
+        uploaded_file = request.FILES.get('project_files')  # Get the uploaded ZIP file
 
-        project_submission, created = ProjectSubmission.objects.get_or_create(
-            event=event, team=team, submitted_by=request.user
-        )
-        project_submission.live_link = live_link
-        project_submission.save()
+        if uploaded_file and uploaded_file.name.endswith('.zip'):
+            # Create a ProjectSubmission or update it if it already exists
+            project_submission, created = ProjectSubmission.objects.get_or_create(
+                event=event, team=team, submitted_by=request.user
+            )
+            project_submission.live_link = live_link
+            project_submission.save()
 
-        for file in uploaded_files:
-            file_instance = File.objects.create(file=file)
+            # Handle the uploaded ZIP file
+            file_instance = File.objects.create(file=uploaded_file)
             project_submission.files.add(file_instance)
 
-        return redirect('competitor:enrolled_hackathons')
-
-    return render(request, 'competitor/submit_project.html', {'event': event, 'team': team})
-
-
+            return redirect('competitor:enrolled_hackathons')
+        else:
+            # Handle the case where the file isn't a ZIP file
+            error_message = "Please upload a valid ZIP file."
+            return redirect('competitor:enrolled_hackathons')
+        
+    return redirect('competitor:enrolled_hackathons')
