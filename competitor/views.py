@@ -215,11 +215,12 @@ def submit_project(request, event_id):
     return redirect('competitor:enrolled_hackathons')
 
 def team_activities(request, team_id):
-    return render(request, 'competitor/team_activities.html', {'team_id': team_id})
-
+    team = Team.objects.get(id=team_id)  # Fetch the team object
+    return render(request, 'competitor/team_activities.html', {'team': team})
 
 def schedules(request, team_id):
     return render(request, 'competitor/schedules.html', {'team_id': team_id})
+
 
 def chat_box(request, team_id):
     return render(request, 'competitor/chat_box.html', {'team_id': team_id})
@@ -230,9 +231,9 @@ def meeting(request, team_id):
 def home(request):
     return render(request, 'competitor/home.html')
 
-def schedule_view(request, team_id):
+def schedules(request, team_id):
     sessions = Session.objects.filter(team_id=team_id).order_by('-date', '-time')
-    return render(request, 'competitor/schedule.html', {'sessions': sessions, 'team_id': team_id})
+    return render(request, 'competitor/schedules.html', {'sessions': sessions, 'team_id': team_id})
 
 
 from django.shortcuts import render, redirect

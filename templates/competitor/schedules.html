@@ -7,13 +7,13 @@
 <!-- Button to add a new session -->
 <div style="text-align: center; margin-top: 20px;">
     <a href="{% url 'competitor:add_session' team_id %}" class="btn-like" 
-       style="display: inline-block; padding: 10px 20px; font-size: 18px; background-color: #007bff; color: white; border-radius: 5px;">
+       style="display: inline-block; padding: 10px 20px; font-size: 18px; color: black; border:solid black;border-radius: 5px;">
         Add a New Session
     </a>
 </div>
 
 <!-- List of scheduled sessions -->
-<div style="margin-top: 30px; padding: 10px;">
+<div style="margin-top: 20px; padding: 10px;">
     {% if sessions %}
         <ul style="list-style: none; padding: 0;">
             {% for session in sessions %}
