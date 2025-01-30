@@ -13,9 +13,14 @@
     {% if teams %}
         <ul style="list-style: none; padding: 0;">
             {% for team in teams %}
-                <li style="margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                    <strong>{{ team.name }}</strong> <br>
-                    <small>Admin: {{ team.team_admin }}</small>
+                <li style="margin-bottom: 10px; padding: 10px; border: 1px solid black; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>{{ team.name }}</strong> <br>
+                        <small>Admin: {{ team.team_admin }}</small>
+                    </div>
+                    <a href="#" class="btn-like" style="padding: 5px 10px; text-decoration: none; color: white; border-radius: 5px;">
+                        Activities
+                    </a>
                 </li>
             {% endfor %}
         </ul>
