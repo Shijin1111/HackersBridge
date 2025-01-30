@@ -86,4 +86,17 @@ class JoinRequest(models.Model):
     def __str__(self):
         return f"Request from {self.user} to join {self.team}"
 
+from django.db import models
+from django.contrib.auth import get_user_model
 
+User = get_user_model()  # ✅ Correct user model reference
+
+class Session(models.Model):
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="sessions")
+    title = models.CharField(max_length=255)
+    date = models.DateField()
+    time = models.TimeField()
+    organizer = models.ForeignKey(User, on_delete=models.CASCADE)  # ✅ Corrected user model reference
+
+    def __str__(self):
+        return f"{self.title} - {self.date} {self.time}"

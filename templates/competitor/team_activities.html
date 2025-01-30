@@ -1,0 +1,26 @@
+{% extends "competitor/competitor_dashboard.html" %}
+
+{% block right_div %}
+
+<h1 style="color:black;text-align: center;">Team Activities</h1>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 10px; height: 60vh; margin-top: 20px;">
+    <a href="{% url 'competitor:schedules' team_id=team.id %}" class="btn-like" 
+       style="display: flex; justify-content: center; align-items: center; text-align: center; font-size: 18px; background-color: #007bff; color: black; border-radius: 10px;">
+       Schedule
+    </a>
+    <a href="{% url 'competitor:chat_box' team_id %}" class="btn-like" 
+       style="display: flex; justify-content: center; align-items: center; text-align: center; font-size: 18px; background-color: #28a745; color: black; border-radius: 10px;">
+        Chat Box
+    </a>
+    <a href="{% url 'competitor:meeting' team_id %}" class="btn-like" 
+       style="display: flex; justify-content: center; align-items: center; text-align: center; font-size: 18px; background-color: #ffc107; color: black; border-radius: 10px;">
+        Meeting
+    </a>
+    <a href="{% url 'competitor:home' %}" class="btn-like" 
+       style="display: flex; justify-content: center; align-items: center; text-align: center; font-size: 18px; background-color: #dc3545; color: black; border-radius: 10px;">
+        Home
+    </a>
+</div>
+
+{% endblock right_div %}

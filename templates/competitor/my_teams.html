@@ -18,7 +18,7 @@
                         <strong>{{ team.name }}</strong> <br>
                         <small>Admin: {{ team.team_admin }}</small>
                     </div>
-                    <a href="#" class="btn-like" style="padding: 5px 10px; text-decoration: none; color: white; border-radius: 5px;">
+                    <a href="{% url 'competitor:team_activities' team.id %}" class="btn-like" style="padding: 5px 10px; text-decoration: none;  color: white; border-radius: 5px;">
                         Activities
                     </a>
                 </li>

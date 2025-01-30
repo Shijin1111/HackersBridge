@@ -1,0 +1,17 @@
+{% extends "competitor/competitor_dashboard.html" %}
+
+{% block right_div %}
+<h1 style="color:black;text-align: center;">Add a New Session</h1>
+
+<form method="post" style="color:black;max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+    {% csrf_token %}
+    <style>
+        form label {
+            color: black;  /* Change the label color to black */
+        }
+    </style>
+    {{ form.as_p }}
+    <button type="submit" class="btn-like" style="width: 100%;">Save Session</button>
+</form>
+
+{% endblock right_div %}
