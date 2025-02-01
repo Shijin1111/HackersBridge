@@ -277,3 +277,89 @@ function getDataChannels() {
     }
     return dataChannels;
 }
+
+const btnScreenShare = document.getElementById('btn-screen-share');
+let screenSharing = false;
+let originalVideoTrack = null;
+
+btnScreenShare.addEventListener('click', async function() {
+    console.log("Screen share button clicked");
+    if (!screenSharing) {
+        console.log("Starting screen share...");
+        startScreenShare();
+    } else {
+        console.log("Stopping screen share...");
+        stopScreenShare();
+    }
+});
+
+async function startScreenShare() {
+    try {
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        console.log("Screen stream obtained:", screenStream);
+
+        const screenTrack = screenStream.getVideoTracks()[0];
+        originalVideoTrack = localStream.getVideoTracks()[0]; // Store original camera track
+
+        console.log("Replacing video track with screen track...");
+        localStream.removeTrack(originalVideoTrack);
+        localStream.addTrack(screenTrack);
+
+        Object.values(mapPeers).forEach(([peer]) => {
+            console.log("Finding sender for video...");
+            const sender = peer.getSenders().find(s => s.track.kind === 'video');
+            console.log("Sender found:", sender);
+            if (sender) sender.replaceTrack(screenTrack);
+        });
+
+        btnScreenShare.innerText = "Stop Sharing";
+        screenSharing = true;
+
+        screenTrack.onended = stopScreenShare;
+    } catch (error) {
+        console.error("Error accessing screen share:", error);
+    }
+}
+
+async function stopScreenShare() {
+    if (!originalVideoTrack) return;
+
+    console.log("Stopping screen share and switching back to camera...");
+    localStream.getVideoTracks().forEach(track => track.stop());
+    localStream.removeTrack(localStream.getVideoTracks()[0]);
+
+    const cameraStream = await navigator.mediaDevices.getUserMedia({ video: true });
+    console.log("Camera stream obtained:", cameraStream);
+    const newVideoTrack = cameraStream.getVideoTracks()[0];
+
+    localStream.addTrack(newVideoTrack);
+
+    Object.values(mapPeers).forEach(([peer]) => {
+        console.log("Replacing screen track with camera track...");
+        const sender = peer.getSenders().find(s => s.track.kind === 'video');
+        console.log("Sender found:", sender);
+        if (sender) sender.replaceTrack(newVideoTrack);
+    });
+
+    btnScreenShare.innerText = "Share Screen";
+    screenSharing = false;
+}
+
+
+// only for debugging screen sharing
+// window.onload = function () {
+//     console.log("meeting.js loaded");
+
+//     const btnScreenShare = document.getElementById("btn-screen-share");
+    
+//     if (!btnScreenShare) {
+//         console.error("❌ btn-screen-share NOT FOUND");
+//         return;
+//     }
+
+//     console.log("✅ btn-screen-share found");
+
+//     btnScreenShare.addEventListener("click", function () {
+//         console.log("🖥️ Screen share button clicked");
+//     });
+// };
