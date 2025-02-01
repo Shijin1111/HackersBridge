@@ -42,19 +42,16 @@ btnjoin.addEventListener('click', function() {
     inputUsername.style.display = 'none';
     btnjoin.disabled = true;
     btnjoin.style.display = 'none';
-    // var labelUsername = document.getElementById('label-username');
     labelUsername.innerHTML = 'Username: ' + username;
 
-
-
+    // Get the team_id passed in the URL
+    var teamId = document.getElementById('team_id').textContent.trim();  // Assuming team_id is rendered into an HTML element
+    
     var loc = window.location;
-    var wsStart = 'ws://';
-    if (loc.protocol == 'https:') {
-        wsStart = 'wss://';
-    }
-var roomName = "general";  // Replace with dynamic room name if needed
-var endpoint = wsStart + loc.host + "/ws/chat/" + roomName + "/";
-    console.log('endpoint:', endpoint);
+    var wsStart = loc.protocol === 'https:' ? 'wss://' : 'ws://';
+    var endpoint = wsStart + loc.host + "/ws/video/" + teamId + "/";
+
+    console.log('WebSocket Endpoint:', endpoint);
 
     webSocket = new WebSocket(endpoint);
     webSocket.addEventListener('open', function(e) {
@@ -69,6 +66,7 @@ var endpoint = wsStart + loc.host + "/ws/chat/" + roomName + "/";
         console.log('Error:', e);
     });
 });
+
 
 var localStream = new MediaStream();
 
@@ -109,9 +107,12 @@ var userMedia = navigator.mediaDevices.getUserMedia(constraints)
     .catch(function(error) {
         console.log('Error accessing media devices.', error);
     });
+
 var btnSendMsg = document.getElementById('btn-send-msg');
 var messageList = document.getElementById('messages-list');
+
 btnSendMsg.addEventListener('click', sendMsgOnClick);
+
 function sendMsgOnClick() {
     var messageInput = document.getElementById('msg');
     var message = messageInput.value;
@@ -121,13 +122,12 @@ function sendMsgOnClick() {
     messageList.appendChild(li);
     var datachannels = getDataChannels();
     message = username + ': ' + message;
-    for(index in datachannels) {
+    for (index in datachannels) {
         datachannels[index].send(message);
     }
     messageInput.value = '';
 }
 
-   
 function sendSignal(action, message) {
     var jsonStr = JSON.stringify({
         'peer': username,
@@ -136,6 +136,7 @@ function sendSignal(action, message) {
     });
     webSocket.send(jsonStr);
 }
+
 function createOfferer(peerUsername, receiver_channel_name) {
     var peer = new RTCPeerConnection(null);
     addLocalTracks(peer);
@@ -163,7 +164,6 @@ function createOfferer(peerUsername, receiver_channel_name) {
     
     peer.addEventListener('icecandidate', function(event) {
         if (event.candidate) {
-            // console.log('New ICE candidate', JSON.stringify(peer.localDescription));
             return;
         }
         sendSignal('new-offer', {
@@ -178,7 +178,6 @@ function createOfferer(peerUsername, receiver_channel_name) {
             console.log('Local description set successfully');
         });
 }
-
 
 function createAnswerer(offer, peerUsername, receiver_channel_name) {
     var peer = new RTCPeerConnection(null);
@@ -210,7 +209,6 @@ function createAnswerer(offer, peerUsername, receiver_channel_name) {
 
     peer.addEventListener('icecandidate', function(event) {
         if (event.candidate) {
-            // console.log('New ICE candidate', JSON.stringify(peer.localDescription));
             return;
         }
         sendSignal('new-answer', {
@@ -229,7 +227,6 @@ function createAnswerer(offer, peerUsername, receiver_channel_name) {
             peer.setLocalDescription(a);
         });
 }
-
 
 function addLocalTracks(peer) {
     localStream.getTracks().forEach(track => {
@@ -259,7 +256,7 @@ function createVideo(peerUsername) {
     return remoteVideo;
 }
 
-function setOnTrack(peer, peerUsername,remoteVideo) {
+function setOnTrack(peer, peerUsername, remoteVideo) {
     var remoteStream = new MediaStream();
     remoteVideo.srcObject = remoteStream;
     peer.addEventListener('track', async function(event) {

@@ -26,4 +26,3 @@ application = ProtocolTypeRouter({
     ),
 })
 
-print("Routing loaded:", competitor.routing.websocket_urlpatterns)
