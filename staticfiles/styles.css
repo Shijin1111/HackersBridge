@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'moonwalk'; /* Name your font */
+    src: url('./fonts/moon_walk-webfont.woff2') format('woff2'), /* Modern browsers */
+         url('./fonts/moon_walk-webfont.woff') format('woff');   /* Older browsers */
+    font-weight: normal; /* Optional: Adjust as needed */
+    font-style: normal;  /* Optional: Adjust as needed */
+  }
+  
+  body,h1 {
+    font-family: 'moonwalk', sans-serif; 
+  }
