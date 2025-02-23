@@ -203,7 +203,7 @@
         <div class="menu">
             <h1 style="color:black;text-align: center;">- options -</h1>
             <ul>
-                <li><a href="#" class="btn-link">CREATE INDIVIDUAL EVENT</a></li>
+                <li><a href="{% url "host:create_individual_event" %}" class="btn-link">CREATE INDIVIDUAL EVENT</a></li>
                 <li><a href="{% url "host:create_group_event" %}" class="btn-link">CREATE GROUP EVENT</a></li>
                 <li><a href="{% url "host:finished_group_events" %}" class="btn-link">FINISHED EVENTS</a></li>
                 <li><a href="{% url "host:live_events" %}" class="btn-link">LIVE EVENTS</a></li>

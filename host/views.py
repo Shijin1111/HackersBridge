@@ -84,3 +84,30 @@ def download_file(request, file_id):
     response = FileResponse(open(file_instance.file.path, 'rb'))
     response['Content-Disposition'] = f'attachment; filename="{file_instance.file.name}"'
     return response
+
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import IndividualEvent, Problem
+from .forms import IndividualEventForm
+
+@login_required
+def create_individual_event(request):
+    if request.method == "POST":
+        form = IndividualEventForm(request.POST)
+        if form.is_valid():
+            individual_event = IndividualEvent.objects.create(
+                hackathon_name=form.cleaned_data["hackathon_name"],
+                organization=form.cleaned_data["organization"],
+                end_time=form.cleaned_data["end_time"],
+                time_duration=form.cleaned_data["time_duration"],
+                created_by=request.user,  
+            )
+            individual_event.problems.set(form.cleaned_data["problems"])  # Add selected problems
+            return redirect("host:host_dashboard")
+        else:
+            print("Form errors:", form.errors)
+    else:
+        form = IndividualEventForm()
+    return render(request, "host/create_individual_event.html", {"form": form})
+
