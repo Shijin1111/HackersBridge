@@ -43,14 +43,17 @@ from .models import IndividualEvent, Problem
 
 class IndividualEventForm(forms.ModelForm):
     problems = forms.ModelMultipleChoiceField(
-        queryset=Problem.objects.all(),
-        widget=forms.CheckboxSelectMultiple,  # Allows selecting multiple problems
-        required=True,
-    )
+    queryset=Problem.objects.all(),
+    widget=forms.SelectMultiple(attrs={"class": "form-control", "id": "id_problems"}),  
+    required=True,
+)
 
     class Meta:
         model = IndividualEvent
         fields = ["hackathon_name", "organization", "end_time", "time_duration", "problems"]
         widgets = {
-            "end_time": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+            "end_time": forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-control"}),
+            "hackathon_name": forms.TextInput(attrs={"class": "form-control"}),
+            "organization": forms.TextInput(attrs={"class": "form-control"}),
+            "time_duration": forms.NumberInput(attrs={"class": "form-control"}),
         }

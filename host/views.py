@@ -88,7 +88,7 @@ def download_file(request, file_id):
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import IndividualEvent, Problem
+from .models import IndividualEvent, Problem, IndividualEventProblem
 from .forms import IndividualEventForm
 
 @login_required
@@ -103,11 +103,16 @@ def create_individual_event(request):
                 time_duration=form.cleaned_data["time_duration"],
                 created_by=request.user,  
             )
-            individual_event.problems.set(form.cleaned_data["problems"])  # Add selected problems
+
+            # ✅ Manually link selected problems using IndividualEventProblem
+            selected_problems = form.cleaned_data["problems"]
+            for problem in selected_problems:
+                IndividualEventProblem.objects.create(individual_event=individual_event, problem=problem)
+
             return redirect("host:host_dashboard")
         else:
             print("Form errors:", form.errors)
     else:
         form = IndividualEventForm()
+    
     return render(request, "host/create_individual_event.html", {"form": form})
-
