@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Problem List</title>
+</head>
+<body>
+    <h1>All Problems</h1>
+    <ul>
+        {% for problem in problems %}
+            <li>
+                <a href="{% url 'problem_details' problem.id %}">{{ problem.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

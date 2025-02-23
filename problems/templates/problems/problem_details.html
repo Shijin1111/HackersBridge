@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ problem.title }}</title>
+    <style>
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        .left {
+            width: 40%;
+            border: solid black;
+            border-radius: 15px;
+            padding: 20px;
+        }
+        .right {
+            width: 50%;
+            border: solid black;
+            border-radius: 15px;
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            border: solid black;
+            border-radius: 5px;
+        }
+        button {
+            margin-top: 10px;
+        }
+        .output {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+        h3 {
+            margin: 0;
+        }
+        h1 {
+            text-align: center;
+        }
+        .testcase-result {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const languageSelect = document.getElementById('language');
+            const codeTextarea = document.getElementById('code');
+
+            // Define language-specific templates
+            const languageCodeTemplates = {
+                'python': "{{ problem.python_function_signature|escapejs }}",
+                'cpp': "{{ problem.cpp_function_signature|escapejs }}",
+                'java': "{{ problem.java_function_signature|escapejs }}"
+            };
+
+            // Populate initial code based on selected language or use existing code
+            const storedCode = `{{ code|escapejs }}`;
+            if (storedCode.trim()) {
+                codeTextarea.value = storedCode;
+            } else {
+                codeTextarea.value = languageCodeTemplates[languageSelect.value] || '';
+            }
+
+            // Update code when language selection changes
+            languageSelect.addEventListener('change', function () {
+                const selectedLang = this.value;
+                codeTextarea.value = languageCodeTemplates[selectedLang] || '';
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>{{ problem.title }}</h1>
+    <div class="container">
+        <div class="left">
+            <h3>Description</h3>
+            <p>{{ problem.description|linebreaks }}</p>
+
+            <h3>Sample Testcases</h3>
+            <pre>{{ problem.sample_testcases }}</pre>
+        </div>
+        <div class="right">
+            <form method="POST">
+                {% csrf_token %}
+                <label for="language">Select Language:</label>
+                <select name="language" id="language">
+                    <option value="python" {% if language == "python" %}selected{% endif %}>Python</option>
+                    <option value="cpp" {% if language == "cpp" %}selected{% endif %}>C++</option>
+                    <option value="java" {% if language == "java" %}selected{% endif %}>Java</option>
+                </select>
+
+                <textarea name="code" id="code">{{ code }}</textarea>
+
+                <button type="submit">Run Code</button>
+            </form>
+
+            {% if results %}
+                <h3>Test Case Results:</h3>
+                <ul>
+                    {% for result in results %}
+                        <li class="testcase-result">
+                            <strong>Test Case Input:</strong>
+                            <pre>{{ result.test_case.input_data }}</pre>
+
+                            <strong>Expected Output:</strong>
+                            <pre>{{ result.expected_output }}</pre>
+
+                            <strong>Program Output:</strong>
+                            <div class="output">{{ result.output }}</div>
+
+                            {% if result.success %}
+                                <p style="color: green; font-weight: bold;">Success!</p>
+                            {% else %}
+                                <p style="color: red; font-weight: bold;">Failure!</p>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
