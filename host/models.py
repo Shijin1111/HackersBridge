@@ -68,3 +68,17 @@ class TestCase(models.Model):
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, related_name='test_cases')
     input_data = models.TextField()
     expected_output = models.TextField()
+
+from django.db import models
+from django.conf import settings
+
+class IndividualEvent(models.Model):
+    hackathon_name = models.CharField(max_length=200)
+    organization = models.CharField(max_length=200)
+    last_submission_datetime = models.DateTimeField()
+    time_duration = models.IntegerField(help_text="Duration in minutes")  
+    problems = models.ManyToManyField('Problem', related_name="individual_events")
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="individual_events")
+
+    def __str__(self):
+        return self.hackathon_name

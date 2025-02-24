@@ -84,3 +84,21 @@ def download_file(request, file_id):
     response = FileResponse(open(file_instance.file.path, 'rb'))
     response['Content-Disposition'] = f'attachment; filename="{file_instance.file.name}"'
     return response
+
+
+from django.shortcuts import render, redirect
+from .forms import IndividualEventForm
+
+def create_individual_event(request):
+    if request.method == "POST":
+        form = IndividualEventForm(request.POST)
+        if form.is_valid():
+            individual_event = form.save(commit=False)
+            individual_event.created_by = request.user
+            individual_event.save()
+            form.save_m2m()  # Save Many-to-Many relationships
+            return redirect('host:host_dashboard')  # Redirect to host dashboard after submission
+    else:
+        form = IndividualEventForm()
+    
+    return render(request, 'host/create_individual_event.html', {'form': form})

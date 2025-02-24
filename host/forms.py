@@ -34,3 +34,27 @@ class GroupEventForm(forms.Form):
         label="Evaluation Criteria",
         widget=forms.Textarea(attrs={"class": "form-control", "placeholder": "Enter Evaluation Criteria"}),
     )
+
+
+# -------------------------------------------------------------------------------------------------
+
+from django import forms
+from .models import IndividualEvent, Problem
+
+class IndividualEventForm(forms.ModelForm):
+    problems = forms.ModelMultipleChoiceField(
+        queryset=Problem.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=True,
+        label="Select Problems"
+    )
+
+    class Meta:
+        model = IndividualEvent
+        fields = ['hackathon_name', 'organization', 'last_submission_datetime', 'time_duration', 'problems']
+        widgets = {
+            'hackathon_name': forms.TextInput(attrs={"class": "form-control", "placeholder": "Enter Hackathon Name"}),
+            'organization': forms.TextInput(attrs={"class": "form-control", "placeholder": "Enter Organization Name"}),
+            'last_submission_datetime': forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-control"}),
+            'time_duration': forms.NumberInput(attrs={"class": "form-control", "placeholder": "Enter Duration in Minutes"}),
+        }
