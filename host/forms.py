@@ -44,7 +44,7 @@ from .models import IndividualEvent, Problem
 class IndividualEventForm(forms.ModelForm):
     problems = forms.ModelMultipleChoiceField(
         queryset=Problem.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.SelectMultiple(attrs={"class": "form-control"}),  # Changed to SelectMultiple
         required=True,
         label="Select Problems"
     )
