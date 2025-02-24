@@ -125,10 +125,14 @@ def find_group_events(request):
     group_events = GroupEvent.objects.all()
     return render(request,'competitor/find_group_events.html',{"group_events":group_events})
 
+def find_individual_events(request):
+    individual_events = IndividualEvent.objects.all()
+    return render(request,'competitor/find_individual_events.html',{"individual_events":individual_events})
+
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from host.models import GroupEvent, TeamEnrollment
+from host.models import GroupEvent, TeamEnrollment, IndividualEvent
 from .models import Team
 
 def enroll_in_event(request, event_id):
