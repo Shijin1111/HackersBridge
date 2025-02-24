@@ -46,7 +46,7 @@ class IndividualEventForm(forms.ModelForm):
         queryset=Problem.objects.all(),
         widget=forms.SelectMultiple(attrs={"class": "form-control"}),  # Changed to SelectMultiple
         required=True,
-        label="Select Problems"
+        label="Search Problems"
     )
 
     class Meta:
