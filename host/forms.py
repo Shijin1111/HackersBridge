@@ -34,6 +34,7 @@ class GroupEventForm(forms.Form):
         label="Evaluation Criteria",
         widget=forms.Textarea(attrs={"class": "form-control", "placeholder": "Enter Evaluation Criteria"}),
     )
+<<<<<<< HEAD
 
 
 
@@ -57,3 +58,5 @@ class IndividualEventForm(forms.ModelForm):
             "organization": forms.TextInput(attrs={"class": "form-control"}),
             "time_duration": forms.NumberInput(attrs={"class": "form-control"}),
         }
+=======
+>>>>>>> parent of dc6a8a5 (ind event creation)

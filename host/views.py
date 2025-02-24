@@ -84,6 +84,7 @@ def download_file(request, file_id):
     response = FileResponse(open(file_instance.file.path, 'rb'))
     response['Content-Disposition'] = f'attachment; filename="{file_instance.file.name}"'
     return response
+<<<<<<< HEAD
 
 
 from django.shortcuts import render, redirect
@@ -116,3 +117,5 @@ def create_individual_event(request):
         form = IndividualEventForm()
     
     return render(request, "host/create_individual_event.html", {"form": form})
+=======
+>>>>>>> parent of dc6a8a5 (ind event creation)

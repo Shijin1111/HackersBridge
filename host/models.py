@@ -44,16 +44,6 @@ class File(models.Model):
 
 # ------------------------------------------------------------------------
 
-class IndividualEvent(models.Model):
-    hackathon_name = models.CharField(max_length=200)
-    organization = models.CharField(max_length=200)
-    end_time = models.DateTimeField()
-    time_duration = models.PositiveIntegerField(help_text="Duration in hours")  # Only positive integers allowed
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="individual_events")
-
-    def __str__(self):
-        return f"{self.hackathon_name} - {self.organization}"
-
 class Problem(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -78,23 +68,3 @@ class TestCase(models.Model):
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, related_name='test_cases')
     input_data = models.TextField()
     expected_output = models.TextField()
-
-class IndividualEvent(models.Model):
-    hackathon_name = models.CharField(max_length=200)
-    organization = models.CharField(max_length=200)
-    end_time = models.DateTimeField()
-    time_duration = models.PositiveIntegerField(help_text="Duration in hours")
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="individual_events")
-
-    def __str__(self):
-        return f"{self.hackathon_name} - {self.organization}"
-
-# ✅ Explicit Intermediate Model to Link IndividualEvent & Problems
-class IndividualEventProblem(models.Model):
-    individual_event = models.ForeignKey(IndividualEvent, on_delete=models.CASCADE, related_name="event_problems")
-    problem = models.ForeignKey(Problem, on_delete=models.CASCADE, related_name="problem_events")
-
-    class Meta:
-        unique_together = ("individual_event", "problem")  # Prevent duplicate event-problem pairs
-
-
