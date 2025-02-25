@@ -21,9 +21,17 @@
                             <td style="padding: 8px;"><strong>Duration</strong></td>
                             <td style="padding: 8px;">: {{ event.time_duration }} minutes</td>
                         </tr>
+                        {% comment %} <tr>
+                            <td style="padding: 8px;"><strong>starting time</strong></td>
+                            <td style="padding: 8px;">: {{ event.start_datetime|date:"Y-m-d H:i" }}</td>
+                        </tr> {% endcomment %}
                         <tr>
                             <td style="padding: 8px;"><strong>Deadline</strong></td>
                             <td style="padding: 8px;">: {{ event.last_submission_datetime|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px;"><strong>Prize</strong></td>
+                            <td style="padding: 8px;">: {{ event.prize }}</td>
                         </tr>
                     </table>
                     <div style="text-align: center; margin-top: 16px;">

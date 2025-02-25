@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.conf import settings
 from django.db import models
 
@@ -75,8 +76,10 @@ from django.conf import settings
 class IndividualEvent(models.Model):
     hackathon_name = models.CharField(max_length=200)
     organization = models.CharField(max_length=200)
+    start_datetime = models.DateTimeField(auto_now_add=True)
     last_submission_datetime = models.DateTimeField()
     time_duration = models.IntegerField(help_text="Duration in minutes")  
+    price = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
     problems = models.ManyToManyField('Problem', related_name="individual_events")
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="individual_events")
 

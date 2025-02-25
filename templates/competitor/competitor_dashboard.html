@@ -212,7 +212,7 @@
         
         <div class="content">
         {% block right_div %}
-            <h1 style="color:black;text-align: center;">- Your group events -</h1>
+            <h1 style="color:black;text-align: center;">- competitor Dashboard -</h1>
         
             {% comment %} {% if group_events %}
                 <div class="cards-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
@@ -240,7 +240,7 @@
                 </div>
             {% else %}
                 <p>No group events found. <a href="{% url 'host:create_group_event' %}">Create your first event!</a></p>
-            {% endif %} {% endcomment %}
+            {% endif %}  {% endcomment %}
         {% endblock right_div %}
         </div>
         
