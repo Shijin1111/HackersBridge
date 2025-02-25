@@ -19,6 +19,9 @@ urlpatterns = [
     path('team/<int:team_id>/schedule/add/', views.add_session, name='add_session'),
     path('team/<int:team_id>/chat-box/', views.chat_box, name='chat_box'),
     path('team/<int:team_id>/meeting/', views.meeting, name='meeting'),
+    path('ind_event_dashboard/<int:event_id>/', views.ind_event_dashboard, name='ind_event_dashboard'),
+    path('solve_problem/<int:problem_id>/', views.solve_problem, name='solve_problem'),
+    path('event/<int:event_id>/submit/', views.submit_event, name='submit_event'),
     path('home/', views.home, name='home'),
     path('logout/', views.logout_view, name='logout'),
 ]

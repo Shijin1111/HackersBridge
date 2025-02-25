@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Individual Event Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .problem-list {
+            list-style: none;
+            padding: 0;
+        }
+        .problem-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #e9ecef;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>{{ event.hackathon_name }}</h2>
+    {% comment %} <p><strong>Organization:</strong> {{ event.organization }}</p>
+    <p><strong>Duration:</strong> {{ event.time_duration }} minutes</p> {% endcomment %}
+
+    {% comment %} <h3>Problems</h3> {% endcomment %}
+    <ul class="problem-list">
+        {% for problem in problems %}
+            <li>
+                <span>{{ problem.title }}</span>
+                <a href="{% url 'competitor:solve_problem' problem.id %}" class="btn btn-primary">Solve</a>
+            </li>
+        {% empty %}
+            <p>No problems available for this event.</p>
+        {% endfor %}
+    </ul>
+
+    <form action="{% url 'competitor:submit_event' event.id %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger w-100">Submit & Exit</button>
+    </form> 
+</div>
+
+</body>
+</html>

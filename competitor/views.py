@@ -1,3 +1,4 @@
+from django import http
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
@@ -18,7 +19,7 @@ def my_teams(request):
 
 
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from .models import Team, JoinRequest
 from django.contrib.auth.models import User
 
@@ -267,3 +268,29 @@ def add_session(request, team_id):
         form = SessionForm()
 
     return render(request, 'competitor/add_session.html', {'form': form, 'team': team})
+
+
+from django.shortcuts import render, get_object_or_404
+from host.models import IndividualEvent
+
+def ind_event_dashboard(request, event_id):
+    event = get_object_or_404(IndividualEvent, id=event_id)
+    problems = event.problems.all()  # Fetch related problems
+
+    return render(request, 'competitor/ind_event_dashboard.html', {
+        'event': event,
+        'problems': problems
+    })
+    
+
+
+
+from django.shortcuts import redirect
+
+def solve_problem(request, problem_id):
+    # Redirect to problem-solving page
+    return HttpResponse("Hello, this is a basic response!")
+
+def submit_event(request, event_id):
+    # Logic to mark event as completed
+    return redirect('/dashboard/')  # Redirect to main dashboard
