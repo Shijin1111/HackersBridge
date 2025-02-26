@@ -2,90 +2,148 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ problem.title }}</title>
     <style>
+        body {
+            background-color: #232d3b;
+            font-family: "Lucida Console", "Courier New", monospace;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #ff7746;
+            text-align: center;
+            margin-top: 20px;
+        }
+
         .container {
             display: flex;
+            width: 96%;
+            max-width: 1200px;
+            margin: 0px;
             gap: 20px;
         }
+
+        .left, .right {
+            padding: 20px;
+            border-radius: 15px;
+            background-color: white;
+            color: black;
+        }
+
         .left {
-            width: 40%;
-            border: solid black;
-            border-radius: 15px;
-            padding: 20px;
+            flex: 1;
         }
+
         .right {
-            width: 50%;
-            border: solid black;
-            border-radius: 15px;
-            padding: 20px;
+            flex: 1.5;
         }
+
+        pre {
+            background-color: #f7f7f7;
+            padding: 10px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+        }
+
         textarea {
             width: 100%;
             height: 200px;
-            border: solid black;
             border-radius: 5px;
+            padding: 10px;
+            font-family: monospace;
         }
-        button {
-            margin-top: 10px;
+
+        .btn-like {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            background-color: rgb(255, 119, 70);
+            border-radius: 5px;
+            color: black;
+            border: solid rgb(255, 119, 70);
+            transition: 0.3s ease;
         }
+
+        .btn-like:hover {
+            background-color: white;
+            border: solid #232d3b;
+            transform: scale(1.01);
+        }
+
+        .testcase-result {
+            padding: 15px;
+            background: #232d3b;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            color:rgb(255, 119, 70);
+        }
+        .testcase-result pre{
+            color:black;
+        }
+
         .output {
-            background-color: #f0f0f0;
+            background-color: #e0e0e0;
             padding: 10px;
             border-radius: 5px;
             white-space: pre-wrap;
+            margin-top: 5px;
+            color:black;
         }
-        h3 {
-            margin: 0;
+        h3{
+            margin-bottom: 0px;
         }
-        h1 {
-            text-align: center;
+        p{
+            margin:10px;
         }
-        .testcase-result {
-            margin-bottom: 15px;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 8px;
+        ul {
+            list-style-type: none;
+            padding: 0;
         }
+        
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const languageSelect = document.getElementById('language');
             const codeTextarea = document.getElementById('code');
 
-            // Define language-specific templates
             const languageCodeTemplates = {
                 'python': "{{ problem.python_function_signature|escapejs }}",
                 'cpp': "{{ problem.cpp_function_signature|escapejs }}",
                 'java': "{{ problem.java_function_signature|escapejs }}"
             };
 
-            // Populate initial code based on selected language or use existing code
             const storedCode = `{{ code|escapejs }}`;
-            if (storedCode.trim()) {
-                codeTextarea.value = storedCode;
-            } else {
-                codeTextarea.value = languageCodeTemplates[languageSelect.value] || '';
-            }
+            codeTextarea.value = storedCode.trim() ? storedCode : (languageCodeTemplates[languageSelect.value] || '');
 
-            // Update code when language selection changes
             languageSelect.addEventListener('change', function () {
-                const selectedLang = this.value;
-                codeTextarea.value = languageCodeTemplates[selectedLang] || '';
+                codeTextarea.value = languageCodeTemplates[this.value] || '';
             });
         });
     </script>
 </head>
 <body>
     <h1>{{ problem.title }}</h1>
+
     <div class="container">
         <div class="left">
-            <h3>Description</h3>
+            <h3 style="margin-top:0px;">Description</h3>
             <p>{{ problem.description|linebreaks }}</p>
 
             <h3>Sample Testcases</h3>
             <pre>{{ problem.sample_testcases }}</pre>
         </div>
+
         <div class="right">
             <form method="POST">
                 {% csrf_token %}
@@ -95,10 +153,10 @@
                     <option value="cpp" {% if language == "cpp" %}selected{% endif %}>C++</option>
                     <option value="java" {% if language == "java" %}selected{% endif %}>Java</option>
                 </select>
-
+                
                 <textarea name="code" id="code">{{ code }}</textarea>
 
-                <button type="submit">Run Code</button>
+                <button type="submit" class="btn-like">Run Code</button>
             </form>
 
             {% if results %}
