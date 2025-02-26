@@ -97,12 +97,12 @@
             background-color: rgb(255, 119, 70);
             border-radius: 5px;
             color: rgb(0, 0, 0);
-            border: solid rgb(255, 119, 70);
+            border: solid #232d3b;
         }
         
         .btn-like:hover {
-            border: solid #232d3b;
-            background-color: white
+            border: solid rgb(255, 119, 70);
+            background-color: white;
             color: black; /* Ensures text color becomes white */
             transform: scale(1.01);
         } 
@@ -145,7 +145,7 @@
         {% for problem in problems %}
             <li>
                 <span>{{ problem.title }}</span>
-                <a href="{% url 'competitor:solve_problem' problem.id %}" class="btn-like">Solve</a>
+                <a href="{% url 'competitor:solve_problem' problem.id %}" class="btn-like">Solve problem</a>
             </li>
         {% empty %}
             <p>No problems available for this event.</p>
