@@ -282,6 +282,10 @@ def ind_event_dashboard(request, event_id):
         'problems': problems
     })
     
+    
+    
+    
+    
 # problme execution logic -------------------------------------------------------------
 import re
 
