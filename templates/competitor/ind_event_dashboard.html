@@ -7,13 +7,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #232d3b;
             font-family: Arial, sans-serif;
             padding: 20px;
         }
         .container {
             max-width: 800px;
-            background: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -31,21 +30,122 @@
             margin-bottom: 10px;
             border-radius: 5px;
         }
+        /* Make problem title bigger */
+        .problem-list li span {
+            font-size: 18px; /* Increase font size */
+            font-weight: bold; /* Make it bold */
+            color: #ffffff; /* Ensure readability */
+        }
+                /* Make the page take full height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 800px;
+            background: #2e3a4a; /* Slightly lighter dark shade */
+            padding: 20px;
+            padding-top: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            flex-grow: 1; /* Makes it expand to fill available space */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Make problem list fill available space */
+        .problem-list {
+            flex-grow: 1; /* Pushes the submit button to the bottom */
+            list-style: none;
+            padding: 0;
+        }
+
+        /* Ensure submit button stays at the bottom */
+        .btn-submit {
+            background-color: red;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            margin-top: auto; /* Pushes it to the bottom */
+            border-radius: 5px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .btn-submit:hover {
+            background-color: darkred;
+        }
+        /* Make problem title bigger */
+        .problem-list li span {
+            font-size: 18px; /* Increase font size */
+            font-weight: bold; /* Make it bold */
+            color: #ffffff; /* Ensure readability */
+        }
+        
+        .btn-like {
+            display: inline-block;
+            padding: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s, transform 0.2s ease, box-shadow 0.3s ease;
+            background-color: rgb(255, 119, 70);
+            border-radius: 5px;
+            color: rgb(0, 0, 0);
+            border: solid rgb(255, 119, 70);
+        }
+        
+        .btn-like:hover {
+            border: solid #232d3b;
+            background-color: white
+            color: black; /* Ensures text color becomes white */
+            transform: scale(1.01);
+        } 
+        .problem-list li span {
+            font-size: 18px; /* Increase font size */
+            font-weight: bold; /* Make it bold */
+            color:black; /* Ensure readability */
+            padding-left: 20px;
+            font-family: "Courier New", monospace;
+        }
+        h2{
+            color:rgb(255, 119, 70);
+        }
+        @font-face {
+            font-family: 'Moonwalk'; /* Name your font */
+            src: url('/static/fonts/moon_walk-webfont.woff2') format('woff2'), 
+                 url('/static/fonts/moon_walk-webfont.woff') format('woff'); 
+            font-weight: normal; 
+            font-style: normal;  
+        }
+        
+        
+        h1 {
+            font-family: 'Moonwalk', sans-serif; 
+            font-size: 3em;
+            color: #ff7746;
+            margin:0px;
+            text-align:center;
+            margin-bottom:0px;
+            margin-top:0px;
+        }
+
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>{{ event.hackathon_name }}</h2>
-    {% comment %} <p><strong>Organization:</strong> {{ event.organization }}</p>
-    <p><strong>Duration:</strong> {{ event.time_duration }} minutes</p> {% endcomment %}
-
-    {% comment %} <h3>Problems</h3> {% endcomment %}
+    <h1>{{ event.hackathon_name }}</h1>
     <ul class="problem-list">
         {% for problem in problems %}
             <li>
                 <span>{{ problem.title }}</span>
-                <a href="{% url 'competitor:solve_problem' problem.id %}" class="btn btn-primary">Solve</a>
+                <a href="{% url 'competitor:solve_problem' problem.id %}" class="btn-like">Solve</a>
             </li>
         {% empty %}
             <p>No problems available for this event.</p>
