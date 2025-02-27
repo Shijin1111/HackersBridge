@@ -134,6 +134,9 @@
             margin-bottom:0px;
             margin-top:0px;
         }
+        h3{
+            color:white;
+        }
 
     </style>
 </head>
@@ -145,8 +148,11 @@
 
     <script>
         // Get event end time from Django
-        var eventEndTime = new Date("{{ event_end_time }}").getTime();
+        var eventEndTimeStr = "{{ event_end_time|date:'Y-m-d\\TH:i:s' }}"; // Django template filter
+        console.log("Event End Time (from Django):", eventEndTimeStr); // Debugging
 
+        var eventEndTime = new Date(eventEndTimeStr).getTime();
+        console.log("Parsed Event End Time:", eventEndTime); // Debugging
         function updateCountdown() {
             var now = new Date().getTime();
             var timeLeft = eventEndTime - now;

@@ -278,24 +278,50 @@ from django.utils.timezone import now
 from django.shortcuts import redirect
 from django.contrib import messages
 
+from django.utils.timezone import now
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from datetime import timedelta
+from host.models import IndividualEvent, IndividualEnrollment
+from django.utils.timezone import now, make_aware
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from datetime import timedelta
+from host.models import IndividualEvent, IndividualEnrollment
+
 def ind_event_dashboard(request, event_id):
     event = get_object_or_404(IndividualEvent, id=event_id)
     
-    # Calculate event end time
-    event_end_time = event.start_datetime + timedelta(minutes=event.time_duration)
+    # Check if the user is already enrolled
+    enrollment, created = IndividualEnrollment.objects.get_or_create(event=event, user=request.user)
 
-    # Check if the event has expired
-    if now() > event_end_time:
+    # Ensure enrolled_at is timezone-aware
+    if enrollment.enrolled_at is None:
+        enrollment.enrolled_at = now()  # Assign current time if null
+        enrollment.save()
+
+    event_end_time = enrollment.enrolled_at + timedelta(minutes=event.time_duration)
+
+    print("enrolled_at:", enrollment.enrolled_at)
+    print("Current time:", now())
+    print("Event end time:", event_end_time)
+
+    # Convert both times to UTC to ensure proper comparison
+    current_time = now()
+    
+    if current_time > event_end_time:
+        print("Redirecting because event has ended.")
         messages.error(request, "The event has ended. You can no longer participate.")
-        return redirect('competitor:event_expired_page')  # Match the name in urls.py
+        return redirect('competitor:event_expired_page')
 
     problems = event.problems.all()  # Fetch related problems
 
     return render(request, 'competitor/ind_event_dashboard.html', {
         'event': event,
         'problems': problems,
-        'event_end_time': event_end_time.strftime('%Y-%m-%dT%H:%M:%S') 
+        'event_end_time': event_end_time
     })
+
 
     
 def ind_event_expiry(request):
