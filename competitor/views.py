@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django import http
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
@@ -273,17 +274,32 @@ def add_session(request, team_id):
 from django.shortcuts import render, get_object_or_404
 from host.models import IndividualEvent
 
+from django.utils.timezone import now
+from django.shortcuts import redirect
+from django.contrib import messages
+
 def ind_event_dashboard(request, event_id):
     event = get_object_or_404(IndividualEvent, id=event_id)
+    
+    # Calculate event end time
+    event_end_time = event.start_datetime + timedelta(minutes=event.time_duration)
+
+    # Check if the event has expired
+    if now() > event_end_time:
+        messages.error(request, "The event has ended. You can no longer participate.")
+        return redirect('competitor:event_expired_page')  # Match the name in urls.py
+
     problems = event.problems.all()  # Fetch related problems
 
     return render(request, 'competitor/ind_event_dashboard.html', {
         'event': event,
-        'problems': problems
+        'problems': problems,
+        'event_end_time': event_end_time.strftime('%Y-%m-%dT%H:%M:%S') 
     })
+
     
-    
-    
+def ind_event_expiry(request):
+    return render(request, 'competitor/ind_event_expiry.html')
     
     
 # problme execution logic -------------------------------------------------------------

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Expired</title>
+    <style>
+        /* Buttons */
+        .btn-link {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s, transform 0.2s ease, box-shadow 0.3s ease;
+            background-color: white;
+            border-radius: 5px;
+            color: rgb(0, 0, 0);
+            border: solid rgb(255, 119, 70);
+        }
+        
+        .btn-link:hover {
+            border: solid #232d3b;
+            background-color: rgb(255, 119, 70);
+            color: black;
+        } 
+        
+        /* Page Layout */
+        body {
+            background-color: #232d3b;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: black;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+        }
+
+        h2 {
+            color: #ff7746;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Event Expired</h2>
+        <p>Sorry, this event has ended. You can no longer submit solutions.</p>
+        <a href="{% url 'competitor:competitor_dashboard' %}" class="btn-link">Back to Dashboard</a>
+    </div>
+</body>
+</html>

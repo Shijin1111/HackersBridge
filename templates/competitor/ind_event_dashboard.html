@@ -141,6 +141,36 @@
 
 <div class="container">
     <h1>{{ event.hackathon_name }}</h1>
+    <h3>Time Remaining: <span id="countdown"></span></h3>
+
+    <script>
+        // Get event end time from Django
+        var eventEndTime = new Date("{{ event_end_time }}").getTime();
+
+        function updateCountdown() {
+            var now = new Date().getTime();
+            var timeLeft = eventEndTime - now;
+
+            if (timeLeft <= 0) {
+                document.getElementById("countdown").innerHTML = "Event Ended!";
+                window.location.href = "{% url 'competitor:event_expired_page' %}";  // Redirect on expiry
+                return;
+            }
+
+            var hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+            var minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+            var seconds = Math.floor((timeLeft / 1000) % 60);
+
+            document.getElementById("countdown").innerHTML = 
+                (hours < 10 ? "0" + hours : hours) + ":" +
+                (minutes < 10 ? "0" + minutes : minutes) + ":" +
+                (seconds < 10 ? "0" + seconds : seconds);
+
+            setTimeout(updateCountdown, 1000);  // Refresh every second
+        }
+
+        updateCountdown();  // Start the countdown
+    </script>
     <ul class="problem-list">
         {% for problem in problems %}
             <li>

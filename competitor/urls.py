@@ -20,6 +20,7 @@ urlpatterns = [
     path('team/<int:team_id>/chat-box/', views.chat_box, name='chat_box'),
     path('team/<int:team_id>/meeting/', views.meeting, name='meeting'),
     path('ind_event_dashboard/<int:event_id>/', views.ind_event_dashboard, name='ind_event_dashboard'),
+    path('event-expired/', views.ind_event_expiry, name='event_expired_page'),
     path('solve_problem/<int:problem_id>/', views.problem_details, name='solve_problem'),
     path('event/<int:event_id>/submit/', views.submit_event, name='submit_event'),
     path('home/', views.home, name='home'),
