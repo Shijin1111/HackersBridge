@@ -85,3 +85,8 @@ class IndividualEvent(models.Model):
 
     def __str__(self):
         return self.hackathon_name
+
+class IndividualEnrollment(models.Model):
+    event = models.ForeignKey('IndividualEvent', on_delete=models.CASCADE, related_name='enrollments')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrolled_events')
+    enrolled_at = models.DateTimeField(auto_now_add=True)  # Timestamp of enrollment
