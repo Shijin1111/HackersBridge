@@ -142,13 +142,14 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
-    <script src="{% static 'proctor.js' %}" defer></script>
+    {% comment %} <script src="{% static 'proctor.js' %}" defer></script> {% endcomment %}
 </head>
 <body>
 
 <div class="container">
     <h1>{{ event.hackathon_name }}</h1>
     <h3>Time Remaining: <span id="countdown"></span></h3>
+  
 
     <script>
         // Get event end time from Django
@@ -196,7 +197,26 @@
         {% csrf_token %}
         <button type="submit" class="btn btn-danger w-100">Submit & Exit</button>
     </form> 
-</div>
+    </div>
+
+        <button id="toggleVideoBtn" class="btn-like" style="margin-top: 10px;">Show camera</button>
+
+        <div id="videoElement" style="display: none; margin-top: 10px;flex: 1; padding-right: 20px;">
+            
+        </div>
+
+        <script>
+            document.getElementById("toggleVideoBtn").addEventListener("click", function() {
+                var videoDiv = document.getElementById("videoElement");
+                if (videoDiv.style.display === "none") {
+                    videoDiv.style.display = "block";
+                    this.textContent = "Hide camera";
+                } else {
+                    videoDiv.style.display = "none";
+                    this.textContent = "Show camera";
+                }
+            });
+        </script>
 
 </body>
 </html>
