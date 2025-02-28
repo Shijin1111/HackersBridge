@@ -271,44 +271,37 @@ def add_session(request, team_id):
     return render(request, 'competitor/add_session.html', {'form': form, 'team': team})
 
 
-from django.shortcuts import render, get_object_or_404
-from host.models import IndividualEvent
-
-from django.utils.timezone import now
-from django.shortcuts import redirect
-from django.contrib import messages
-
-from django.utils.timezone import now
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from datetime import timedelta
 from host.models import IndividualEvent, IndividualEnrollment
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.timezone import now, make_aware
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
 from datetime import timedelta
-from host.models import IndividualEvent, IndividualEnrollment
+import pytz
+from django.contrib import messages
+
+# Define IST timezone
+IST = pytz.timezone('Asia/Kolkata')
 
 def ind_event_dashboard(request, event_id):
     event = get_object_or_404(IndividualEvent, id=event_id)
-    
+
     # Check if the user is already enrolled
     enrollment, created = IndividualEnrollment.objects.get_or_create(event=event, user=request.user)
 
-    # Ensure enrolled_at is timezone-aware
+    # Ensure enrolled_at is timezone-aware in IST
     if enrollment.enrolled_at is None:
-        enrollment.enrolled_at = now()  # Assign current time if null
+        enrollment.enrolled_at = make_aware(now(), IST)  # Assign current IST time if null
         enrollment.save()
 
-    event_end_time = enrollment.enrolled_at + timedelta(minutes=event.time_duration)
+    # Convert enrolled_at to IST
+    enrolled_at_ist = enrollment.enrolled_at.astimezone(IST)
+    event_end_time = enrolled_at_ist + timedelta(minutes=event.time_duration)
 
-    print("enrolled_at:", enrollment.enrolled_at)
-    print("Current time:", now())
-    print("Event end time:", event_end_time)
+    current_time = now().astimezone(IST)
 
-    # Convert both times to UTC to ensure proper comparison
-    current_time = now()
-    
+    print("Enrolled at (IST):", enrolled_at_ist)
+    print("Current time (IST):", current_time)
+    print("Event end time (IST):", event_end_time)
+
     if current_time > event_end_time:
         print("Redirecting because event has ended.")
         messages.error(request, "The event has ended. You can no longer participate.")
