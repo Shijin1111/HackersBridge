@@ -281,6 +281,7 @@ from django.contrib import messages
 # Define IST timezone
 IST = pytz.timezone('Asia/Kolkata')
 
+@login_required
 def ind_event_dashboard(request, event_id):
     event = get_object_or_404(IndividualEvent, id=event_id)
 

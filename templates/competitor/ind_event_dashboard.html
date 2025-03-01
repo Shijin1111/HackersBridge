@@ -19,6 +19,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding-bottom: 0px;
         }
         .problem-list {
             list-style: none;
@@ -221,19 +222,20 @@
             content: "SECS";
             left: 22%;
         }
-        
-        
-        
+                
         .time .colon{
             color: #212121;
             font-size: 20px;
         }
+        .container {
+            padding-bottom: 0px !important;
+        }
+        
     </style>
 </head>
 <body>
 
     <div class="container">
-        
         <div class="timer">
             <h1>{{ event.hackathon_name }}</h1>
             <div class="time z-depth-2">
@@ -244,11 +246,9 @@
                 <span class="sec" id="sec">00</span>
             </div>
         </div>
-    
-        
-        {% comment %} <div id="status"></div>
-        <div id="log" style="margin-top: 20px;"></div> {% endcomment %}
-        <ul class="problem-list">
+
+        <!-- Initially Hidden Problem List -->
+        <ul class="problem-list" id="problemList" style="display: none;">
             {% for problem in problems %}
                 <li>
                     <span>{{ problem.title }}</span>
@@ -257,22 +257,96 @@
             {% empty %}
                 <p>No problems available for this event.</p>
             {% endfor %}
+            <div class="text-center mt-3">
+                <button id="toggleVideoBtn" class="btn btn-primary">Show Camera</button>
+            </div>
+            
+            <!-- Centered Video Element -->
+            <div class="text-center mt-3">
+                <video id="videoElement" width="480" height="360" autoplay style="display: none; border: 2px solid white; border-radius: 10px;"></video>
+            </div>
         </ul>
-        
-        <form action="{% url 'competitor:submit_event' event.id %}" method="POST">
+
+        <!-- Start Exam / Submit & Exit Button -->
+        <form id="examForm" method="POST" action="{% url 'competitor:submit_event' event.id %}">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger w-100">Submit & Exit</button>
+            <button type="button" id="examButton" class="btn btn-danger w-100">Start Exam</button>
         </form>
-        <div class="text-center mt-3">
-            <button id="toggleVideoBtn" class="btn btn-primary">Show Camera</button>
-        </div>
-        
-        <!-- Centered Video Element -->
-        <div class="text-center mt-3">
-            <video id="videoElement" width="480" height="360" autoplay style="display: none; border: 2px solid white; border-radius: 10px;"></video>
-        </div>
+
     </div>
     
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let examStarted = false;
+            const examButton = document.getElementById("examButton");
+            const problemList = document.getElementById("problemList");
+
+            // Function to enter fullscreen mode
+            function enterFullScreen() {
+                let elem = document.documentElement; // The entire page
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.mozRequestFullScreen) { // Firefox
+                    elem.mozRequestFullScreen();
+                } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, Edge
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) { // IE/Edge
+                    elem.msRequestFullscreen();
+                }
+            }
+
+            // Handle button click
+            examButton.addEventListener("click", () => {
+                if (!examStarted) {
+                    enterFullScreen(); // Make page fullscreen
+                    problemList.style.display = "block"; // Show problems
+                    examButton.textContent = "Submit & Exit";
+                    examStarted = true;
+                } else {
+                    window.location.href = "{% url 'competitor:competitor_dashboard' %}";
+                }
+            });
+        });
+    </script>
+
+    <script>
+        var eventEndTime = "{{ event_end_time }}"; // Pass Django time
+    
+        document.addEventListener("DOMContentLoaded", () => {
+            let eventEndDate = new Date(eventEndTime); // Convert to Date object
+    
+            if (isNaN(eventEndDate.getTime())) {
+                document.getElementById("hour").innerHTML = "00";
+                document.getElementById("min").innerHTML = "00";
+                document.getElementById("sec").innerHTML = "00";
+                return;
+            }
+    
+            function updateCountdown() {
+                let now = new Date();
+                let timeRemaining = eventEndDate - now;
+    
+                if (timeRemaining <= 0) {
+                    document.getElementById("hour").innerHTML = "00";
+                    document.getElementById("min").innerHTML = "00";
+                    document.getElementById("sec").innerHTML = "00";
+                    clearInterval(timerInterval);
+                    return;
+                }
+    
+                let hours = Math.floor((timeRemaining / (1000 * 60 * 60)) % 24);
+                let minutes = Math.floor((timeRemaining / (1000 * 60)) % 60);
+                let seconds = Math.floor((timeRemaining / 1000) % 60);
+    
+                document.getElementById("hour").innerHTML = String(hours).padStart(2, '0');
+                document.getElementById("min").innerHTML = String(minutes).padStart(2, '0');
+                document.getElementById("sec").innerHTML = String(seconds).padStart(2, '0');
+            }
+    
+            let timerInterval = setInterval(updateCountdown, 1000);
+            updateCountdown(); // Initial call
+        });
+    </script>
     <script>
         let isMonitoring = false;
         let faceDetected = false;
@@ -400,7 +474,6 @@
             updateCountdown(); // Initial call
         });
     </script>
-    
     
     </body>
     </html>
