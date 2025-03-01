@@ -277,7 +277,7 @@
     
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            let examStarted = false;
+            let examStarted = localStorage.getItem("examStarted") === "true"; // Check stored value
             const examButton = document.getElementById("examButton");
             const problemList = document.getElementById("problemList");
 
@@ -295,6 +295,12 @@
                 }
             }
 
+            // If exam was already started before, show problem list & change button text
+            if (examStarted) {
+                problemList.style.display = "block";
+                examButton.textContent = "Submit & Exit";
+            }
+
             // Handle button click
             examButton.addEventListener("click", () => {
                 if (!examStarted) {
@@ -302,8 +308,9 @@
                     problemList.style.display = "block"; // Show problems
                     examButton.textContent = "Submit & Exit";
                     examStarted = true;
+                    localStorage.setItem("examStarted", "true"); // Save state
                 } else {
-                    window.location.href = "{% url 'competitor:competitor_dashboard' %}";
+                    window.location.href = "{% url 'competitor:competitor_dashboard' %}"; // Redirect on exit
                 }
             });
         });
@@ -347,6 +354,7 @@
             updateCountdown(); // Initial call
         });
     </script>
+
     <script>
         let isMonitoring = false;
         let faceDetected = false;

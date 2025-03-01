@@ -100,3 +100,16 @@ class Session(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.date} {self.time}"
+
+from django.db import models
+from django.apps import apps  # Import apps module for lazy import
+
+class ProblemResult(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    problem = models.ForeignKey("host.Problem", on_delete=models.CASCADE)  # Use "appname.ModelName"
+    testcases_passed = models.IntegerField(default=0)
+    total_testcases = models.IntegerField(default=0)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.problem.title}: {self.testcases_passed}/{self.total_testcases}"

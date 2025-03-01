@@ -340,12 +340,15 @@ def get_complete_code(problem, language, user_code):
 
 from host.models import Problem
 import subprocess,os
+from .models import ProblemResult
 
 def problem_details(request, problem_id):
     problem = get_object_or_404(Problem, id=problem_id)
     results = []
     code = ""
     language = "python"
+    testcases_passed = 0
+    total_testcases = problem.test_cases.count()
 
     if request.method == 'POST':
         language = request.POST.get('language')
@@ -398,6 +401,8 @@ def problem_details(request, problem_id):
                 output = "Execution timed out."
             
             success = (output == expected_output)
+            if success:
+                testcases_passed += 1 
             results.append({
                 'test_case': test_case,
                 'output': output,
@@ -409,7 +414,20 @@ def problem_details(request, problem_id):
         for filename in ['code.cpp', 'code.out', 'Main.java', 'Main.class']:
             if os.path.exists(filename):
                 os.remove(filename)
+        # **Save the result if "Save Code" button was clicked**
+        if 'save_result' in request.POST:
+                problem_result, created = ProblemResult.objects.get_or_create(
+                    user=request.user,
+                    problem=problem,
+                    defaults={'testcases_passed': testcases_passed, 'total_testcases': total_testcases}
+                )
 
+                if not created:
+                    # If entry already exists, update the testcases_passed and total_testcases
+                    problem_result.testcases_passed = testcases_passed
+                    problem_result.total_testcases = total_testcases
+                    problem_result.save()
+                    
     return render(request, 'competitor/problem_details.html', {
         'problem': problem,
         'results': results,
