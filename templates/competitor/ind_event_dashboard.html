@@ -140,7 +140,16 @@
         h3{
             color:white;
         }
-
+        #videoElement {
+            max-width: 100%;
+            width: 480px;
+            height: 360px;
+            display: none;
+            margin: auto;
+            border: 3px solid white;
+            border-radius: 10px;
+        }
+        
     </style>
 </head>
 <body>
@@ -149,8 +158,6 @@
         <h1>{{ event.hackathon_name }}</h1>
         <h3>Time Remaining: <span id="countdown"></span></h3>
         
-        <button id="toggleVideoBtn" class="btn btn-primary">Show Camera</button>
-        <video id="videoElement" width="320" height="240" autoplay style="display: none;"></video>
         <div id="status"></div>
         <div id="log" style="margin-top: 20px;"></div>
         
@@ -169,48 +176,65 @@
             {% csrf_token %}
             <button type="submit" class="btn btn-danger w-100">Submit & Exit</button>
         </form>
+        <div class="text-center mt-3">
+            <button id="toggleVideoBtn" class="btn btn-primary">Show Camera</button>
+        </div>
+        
+        <!-- Centered Video Element -->
+        <div class="text-center mt-3">
+            <video id="videoElement" width="480" height="360" autoplay style="display: none; border: 2px solid white; border-radius: 10px;"></video>
+        </div>
     </div>
     
     <script>
-        let isMonitoring = true;
+        let isMonitoring = false;
         let faceDetected = false;
         let unauthorizedObjectDetected = false;
         let videoStream = null;
         let logArray = [];
-    
-        async function startMonitoring() {
-            if (!isMonitoring) return;
-            
+        
+        document.getElementById("toggleVideoBtn").addEventListener("click", () => {
             const video = document.getElementById("videoElement");
-            const statusElement = document.getElementById("status");
+        
+            if (video.style.display === "none") {
+                video.style.display = "block";
+                document.getElementById("toggleVideoBtn").textContent = "Hide Camera";
+            } else {
+                video.style.display = "none";
+                document.getElementById("toggleVideoBtn").textContent = "Show Camera";
+            }
+        });
+
+        async function startMonitoring() {
+            if (isMonitoring) return;
+            isMonitoring = true;
+    
+            const video = document.getElementById("videoElement");
             const faceModel = await blazeface.load();
             const objectModel = await cocoSsd.load();
-            
+    
             navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
                 videoStream = stream;
                 video.srcObject = stream;
                 video.play();
-                statusElement.innerText = "Monitoring started...";
             }).catch(function (err) {
-                console.log("Error accessing webcam: ", err);
-                statusElement.innerText = "Error accessing webcam.";
+                alert("Error accessing webcam: " + err);
             });
     
             video.addEventListener("loadeddata", async () => {
                 while (isMonitoring) {
                     let logMessage = "";
                     const faces = await faceModel.estimateFaces(video, false);
-                    
-                    if (faces.length === 0) {
-                        if (faceDetected) {
-                            logMessage = "No face detected!";
-                            logActivity(logMessage, "high");
-                        }
+    
+                    if (faces.length === 0 && faceDetected) {
+                        logMessage = "No face detected! Please stay in front of the camera.";
+                        logActivity(logMessage, "high");
+                        alert(logMessage);
                         faceDetected = false;
-                    } else {
+                    } else if (faces.length > 0) {
                         faceDetected = true;
                     }
-                    
+    
                     const predictions = await objectModel.detect(video);
                     let foundUnauthorizedObject = false;
                     predictions.forEach((prediction) => {
@@ -219,38 +243,39 @@
                             if (!unauthorizedObjectDetected) {
                                 logMessage = `Warning: Unauthorized object detected: ${prediction.class}`;
                                 logActivity(logMessage, "high");
+                                alert(logMessage);
                                 unauthorizedObjectDetected = true;
                             }
                         }
                     });
+    
                     if (!foundUnauthorizedObject) unauthorizedObjectDetected = false;
                     await tf.nextFrame();
                 }
             });
         }
     
-        function logActivity(message, severity) {
-            const logElement = document.getElementById("log");
-            const timestamp = new Date().toLocaleTimeString();
-            const logEntry = document.createElement("div");
-            logEntry.innerText = `[${timestamp}] ${message}`;
-            logElement.appendChild(logEntry);
-            logArray.push(`[${timestamp}] ${message}`);
+        function stopMonitoring() {
+            isMonitoring = false;
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+            document.getElementById("videoElement").srcObject = null;
         }
     
-        document.getElementById("toggleVideoBtn").addEventListener("click", function() {
-            var video = document.getElementById("videoElement");
-            if (video.style.display === "none") {
-                video.style.display = "block";
-                this.textContent = "Hide Camera";
-            } else {
-                video.style.display = "none";
-                this.textContent = "Show Camera";
-            }
-        });
+        function logActivity(message, severity) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}`;
+            logArray.push(logEntry);
+            console.log(logEntry); // Keeping logs in console (you can store them elsewhere)
+        }
     
-        startMonitoring(); // Automatically start monitoring when the page loads
+        document.addEventListener("DOMContentLoaded", () => {
+            startMonitoring(); // Automatically start monitoring when the page loads
+        });
     </script>
+    
+    
     </body>
     </html>
     
