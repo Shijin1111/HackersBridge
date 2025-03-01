@@ -310,10 +310,10 @@ def ind_event_dashboard(request, event_id):
     problems = event.problems.all()  # Fetch related problems
 
     return render(request, 'competitor/ind_event_dashboard.html', {
-        'event': event,
-        'problems': problems,
-        'event_end_time': event_end_time
-    })
+    'event': event,
+    'problems': problems,
+    'event_end_time': event_end_time.strftime('%Y-%m-%dT%H:%M:%S')  # Send ISO format
+})
 
 
     

@@ -39,7 +39,6 @@
             font-weight: bold; /* Make it bold */
             color: #ffffff; /* Ensure readability */
         }
-                /* Make the page take full height */
         html, body {
             height: 100%;
             margin: 0;
@@ -139,6 +138,7 @@
         }
         h3{
             color:white;
+            text-align:center;
         }
         #videoElement {
             max-width: 100%;
@@ -149,18 +149,105 @@
             border: 3px solid white;
             border-radius: 10px;
         }
+        .timer{
+            background-color: #e0f2f1;
+            width: 80%;
+            height: 120px;
+            margin: 0 auto;
+            text-align: center;
+            padding-top: 5px;
+            position: relative;
+            margin-top: 0px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            align-items: center;
+        }
         
+        .timer .time{
+            position: absolute;
+            width: 80%;
+            bottom: 7%;
+            left:-10%;
+            background-color: #fff;
+            height: 50px;
+            line-height: 55px;
+            border-radius: 5px;
+            transform: translateX(-50%); 
+            left: 50%;
+        }
+        
+        .timer .small{
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: #00897b;
+        }
+        
+        .timer .big{
+            font-size: 17px;
+            letter-spacing: 3px;
+            color: #00897b;
+            font-weight: bold;
+        }
+        
+        .time .min, .sec, .hour{
+            color: #212121;
+            font-size: 25px;
+            padding: 0 10px;
+            position: relative;
+        }
+        
+        .time .hour:after, .sec:after, .min:after{
+            position: absolute;
+            font-size: 10px;
+            font-weight: bold;
+            color: #919191;
+            letter-spacing: 0.5px;
+            top:0;
+            
+        }
+        
+        .time .hour:after{
+            content: "HOUR";
+            left: 17%;
+        }
+        
+        .time .min:after{
+            content: "MINS";
+            left: 22%;
+        }
+        
+        .time .sec:after{
+            content: "SECS";
+            left: 22%;
+        }
+        
+        
+        
+        .time .colon{
+            color: #212121;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>{{ event.hackathon_name }}</h1>
-        <h3>Time Remaining: <span id="countdown"></span></h3>
         
-        <div id="status"></div>
-        <div id="log" style="margin-top: 20px;"></div>
+        <div class="timer">
+            <h1>{{ event.hackathon_name }}</h1>
+            <div class="time z-depth-2">
+                <span class="hour" id="hour">00</span>
+                <span class="colon">:</span>
+                <span class="min" id="min">00</span>
+                <span class="colon">:</span>
+                <span class="sec" id="sec">00</span>
+            </div>
+        </div>
+    
         
+        {% comment %} <div id="status"></div>
+        <div id="log" style="margin-top: 20px;"></div> {% endcomment %}
         <ul class="problem-list">
             {% for problem in problems %}
                 <li>
@@ -272,6 +359,45 @@
     
         document.addEventListener("DOMContentLoaded", () => {
             startMonitoring(); // Automatically start monitoring when the page loads
+        });
+        
+    </script>
+    <script>
+        var eventEndTime = "{{ event_end_time }}"; // Pass Django time
+    
+        document.addEventListener("DOMContentLoaded", () => {
+            let eventEndDate = new Date(eventEndTime); // Convert to Date object
+    
+            if (isNaN(eventEndDate.getTime())) {
+                document.getElementById("hour").innerHTML = "00";
+                document.getElementById("min").innerHTML = "00";
+                document.getElementById("sec").innerHTML = "00";
+                return;
+            }
+    
+            function updateCountdown() {
+                let now = new Date();
+                let timeRemaining = eventEndDate - now;
+    
+                if (timeRemaining <= 0) {
+                    document.getElementById("hour").innerHTML = "00";
+                    document.getElementById("min").innerHTML = "00";
+                    document.getElementById("sec").innerHTML = "00";
+                    clearInterval(timerInterval);
+                    return;
+                }
+    
+                let hours = Math.floor((timeRemaining / (1000 * 60 * 60)) % 24);
+                let minutes = Math.floor((timeRemaining / (1000 * 60)) % 60);
+                let seconds = Math.floor((timeRemaining / 1000) % 60);
+    
+                document.getElementById("hour").innerHTML = String(hours).padStart(2, '0');
+                document.getElementById("min").innerHTML = String(minutes).padStart(2, '0');
+                document.getElementById("sec").innerHTML = String(seconds).padStart(2, '0');
+            }
+    
+            let timerInterval = setInterval(updateCountdown, 1000);
+            updateCountdown(); // Initial call
         });
     </script>
     
