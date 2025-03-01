@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Individual Event Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
     <style>
         body {
             background-color: #232d3b;
@@ -139,84 +142,107 @@
         }
 
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
-    {% comment %} <script src="{% static 'proctor.js' %}" defer></script> {% endcomment %}
 </head>
 <body>
 
-<div class="container">
-    <h1>{{ event.hackathon_name }}</h1>
-    <h3>Time Remaining: <span id="countdown"></span></h3>
-  
-
-    <script>
-        // Get event end time from Django
-        var eventEndTimeStr = "{{ event_end_time|date:'Y-m-d\\TH:i:s' }}"; // Django template filter
-        console.log("Event End Time (from Django):", eventEndTimeStr); // Debugging
-
-        var eventEndTime = new Date(eventEndTimeStr).getTime();
-        console.log("Parsed Event End Time:", eventEndTime); // Debugging
-        function updateCountdown() {
-            var now = new Date().getTime();
-            var timeLeft = eventEndTime - now;
-
-            if (timeLeft <= 0) {
-                document.getElementById("countdown").innerHTML = "Event Ended!";
-                window.location.href = "{% url 'competitor:event_expired_page' %}";  // Redirect on expiry
-                return;
-            }
-
-            var hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
-            var minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
-            var seconds = Math.floor((timeLeft / 1000) % 60);
-
-            document.getElementById("countdown").innerHTML = 
-                (hours < 10 ? "0" + hours : hours) + ":" +
-                (minutes < 10 ? "0" + minutes : minutes) + ":" +
-                (seconds < 10 ? "0" + seconds : seconds);
-
-            setTimeout(updateCountdown, 1000);  // Refresh every second
-        }
-
-        updateCountdown();  // Start the countdown
-    </script>
-    <ul class="problem-list">
-        {% for problem in problems %}
-            <li>
-                <span>{{ problem.title }}</span>
-                <a href="{% url 'competitor:solve_problem' problem.id %}" class="btn-like">Solve problem</a>
-            </li>
-        {% empty %}
-            <p>No problems available for this event.</p>
-        {% endfor %}
-    </ul>
-
-    <form action="{% url 'competitor:submit_event' event.id %}" method="POST">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger w-100">Submit & Exit</button>
-    </form> 
+    <div class="container">
+        <h1>{{ event.hackathon_name }}</h1>
+        <h3>Time Remaining: <span id="countdown"></span></h3>
+        
+        <button id="toggleVideoBtn" class="btn btn-primary">Show Camera</button>
+        <video id="videoElement" width="320" height="240" autoplay style="display: none;"></video>
+        <div id="status"></div>
+        <div id="log" style="margin-top: 20px;"></div>
+        
+        <ul class="problem-list">
+            {% for problem in problems %}
+                <li>
+                    <span>{{ problem.title }}</span>
+                    <a href="{% url 'competitor:solve_problem' problem.id %}" class="btn-like">Solve problem</a>
+                </li>
+            {% empty %}
+                <p>No problems available for this event.</p>
+            {% endfor %}
+        </ul>
+        
+        <form action="{% url 'competitor:submit_event' event.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger w-100">Submit & Exit</button>
+        </form>
     </div>
-
-        <button id="toggleVideoBtn" class="btn-like" style="margin-top: 10px;">Show camera</button>
-
-        <div id="videoElement" style="display: none; margin-top: 10px;flex: 1; padding-right: 20px;">
+    
+    <script>
+        let isMonitoring = false;
+        let faceDetected = false;
+        let unauthorizedObjectDetected = false;
+        let videoStream = null;
+    
+        async function startMonitoring() {
+            if (isMonitoring) return;
+            isMonitoring = true;
+            const video = document.getElementById("videoElement");
+            const statusElement = document.getElementById("status");
+            const faceModel = await blazeface.load();
+            const objectModel = await cocoSsd.load();
             
-        </div>
-
-        <script>
-            document.getElementById("toggleVideoBtn").addEventListener("click", function() {
-                var videoDiv = document.getElementById("videoElement");
-                if (videoDiv.style.display === "none") {
-                    videoDiv.style.display = "block";
-                    this.textContent = "Hide camera";
-                } else {
-                    videoDiv.style.display = "none";
-                    this.textContent = "Show camera";
+            navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
+                videoStream = stream;
+                video.srcObject = stream;
+                video.play();
+                statusElement.innerText = "";
+            }).catch(function (err) {
+                console.log("Error accessing webcam: ", err);
+                statusElement.innerText = "Error accessing webcam.";
+            });
+            
+            video.addEventListener("loadeddata", async () => {
+                while (isMonitoring) {
+                    const faces = await faceModel.estimateFaces(video, false);
+                    if (faces.length === 0 && faceDetected) {
+                        logActivity("No face detected!", "high");
+                        faceDetected = false;
+                    } else {
+                        faceDetected = true;
+                    }
+                    
+                    const predictions = await objectModel.detect(video);
+                    let foundUnauthorizedObject = false;
+                    predictions.forEach((prediction) => {
+                        if (prediction.class === "cell phone" || prediction.class === "laptop") {
+                            foundUnauthorizedObject = true;
+                            if (!unauthorizedObjectDetected) {
+                                logActivity(`Warning: Unauthorized object detected: ${prediction.class}`, "high");
+                                unauthorizedObjectDetected = true;
+                            }
+                        }
+                    });
+                    if (!foundUnauthorizedObject) unauthorizedObjectDetected = false;
+                    await tf.nextFrame();
                 }
             });
-        </script>
-
-</body>
-</html>
+        }
+    
+        function logActivity(message, severity) {
+            const logElement = document.getElementById("log");
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement("div");
+            logEntry.innerText = `[${timestamp}] ${message}`;
+            logElement.appendChild(logEntry);
+        }
+    
+        document.addEventListener("DOMContentLoaded", startMonitoring);
+        
+        document.getElementById("toggleVideoBtn").addEventListener("click", function() {
+            const video = document.getElementById("videoElement");
+            if (video.style.display === "none") {
+                video.style.display = "block";
+                this.textContent = "Hide Camera";
+            } else {
+                video.style.display = "none";
+                this.textContent = "Show Camera";
+            }
+        });
+    </script>
+    </body>
+    </html>
+    
