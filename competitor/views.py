@@ -441,4 +441,4 @@ def problem_details(request, problem_id):
 
 def submit_event(request, event_id):
     # Logic to mark event as completed
-    return redirect('/dashboard/')  # Redirect to main dashboard
+    return redirect('/competitor/dashboard/')  # Redirect to main dashboard

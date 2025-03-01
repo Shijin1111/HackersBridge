@@ -113,3 +113,11 @@ class ProblemResult(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.problem.title}: {self.testcases_passed}/{self.total_testcases}"
+
+class IndResult(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    event = models.ForeignKey('host.IndividualEvent',on_delete=models.CASCADE)
+    passed_testcases = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.event} - {self.passed_testcases} Passed"

@@ -248,7 +248,7 @@
         </div>
 
         <!-- Initially Hidden Problem List -->
-        <ul class="problem-list" id="problemList" style="display: none;">
+        <ul class="problem-list" id="problemList" >
             {% for problem in problems %}
                 <li>
                     <span>{{ problem.title }}</span>
@@ -267,55 +267,12 @@
             </div>
         </ul>
 
-        <!-- Start Exam / Submit & Exit Button -->
-        <form id="examForm" method="POST" action="{% url 'competitor:submit_event' event.id %}">
-            {% csrf_token %}
-            <button type="button" id="examButton" class="btn btn-danger w-100">Start Exam</button>
-        </form>
-
+        <a href = "{% url 'competitor:submit_event' event.id %}" class="btn btn-danger w-100">Submit & Exit</a>
+        
+       
     </div>
     
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            let examStarted = localStorage.getItem("examStarted") === "true"; // Check stored value
-            const examButton = document.getElementById("examButton");
-            const problemList = document.getElementById("problemList");
-
-            // Function to enter fullscreen mode
-            function enterFullScreen() {
-                let elem = document.documentElement; // The entire page
-                if (elem.requestFullscreen) {
-                    elem.requestFullscreen();
-                } else if (elem.mozRequestFullScreen) { // Firefox
-                    elem.mozRequestFullScreen();
-                } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, Edge
-                    elem.webkitRequestFullscreen();
-                } else if (elem.msRequestFullscreen) { // IE/Edge
-                    elem.msRequestFullscreen();
-                }
-            }
-
-            // If exam was already started before, show problem list & change button text
-            if (examStarted) {
-                problemList.style.display = "block";
-                examButton.textContent = "Submit & Exit";
-            }
-
-            // Handle button click
-            examButton.addEventListener("click", () => {
-                if (!examStarted) {
-                    enterFullScreen(); // Make page fullscreen
-                    problemList.style.display = "block"; // Show problems
-                    examButton.textContent = "Submit & Exit";
-                    examStarted = true;
-                    localStorage.setItem("examStarted", "true"); // Save state
-                } else {
-                    window.location.href = "{% url 'competitor:competitor_dashboard' %}"; // Redirect on exit
-                }
-            });
-        });
-    </script>
-
+    
     <script>
         var eventEndTime = "{{ event_end_time }}"; // Pass Django time
     
