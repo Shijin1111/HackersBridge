@@ -26,6 +26,8 @@ urlpatterns = [
     path('results/', views.results, name='results'),
     path('ind_results/', views.ind_results, name='ind_results'),
     path('ind_leaderboard/<int:event_id>/',views.ind_leaderboard,name='ind_leaderboard'),
+    path('group_results/', views.group_results, name='group_results'),
+    path('group_leaderboard/<int:event_id>/',views.group_leaderboard,name='group_leaderboard'),
     path('home/', views.home, name='home'),
     path('logout/', views.logout_view, name='logout'),
 ]

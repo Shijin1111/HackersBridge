@@ -12,6 +12,8 @@ class GroupEvent(models.Model):
     evaluation_criteria = models.TextField()
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="group_events")
 
+    def __str__(self):
+        return self.hackathon_name
 
 class TeamEnrollment(models.Model):
     event = models.ForeignKey('GroupEvent', on_delete=models.CASCADE, related_name='enrollments')
@@ -90,3 +92,21 @@ class IndividualEnrollment(models.Model):
     event = models.ForeignKey('IndividualEvent', on_delete=models.CASCADE, related_name='enrollments')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrolled_events')
     enrolled_at = models.DateTimeField(auto_now_add=True)  # Timestamp of enrollment
+
+
+class HackathonGrading(models.Model):
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="grades")
+    event = models.ForeignKey(GroupEvent, on_delete=models.CASCADE, related_name="grades")
+    code_quality = models.IntegerField(default=0)  # Score out of 10
+    innovation = models.IntegerField(default=0)    # Score out of 10
+    Security = models.IntegerField(default=0)      # Score out of 10
+    frontend = models.IntegerField(default=0)  # Score out of 10
+    functionality = models.IntegerField(default=0) # Score out of 10
+    overall_score = models.IntegerField(default=0) # Can be calculated from other fields
+
+    def calculate_total_score(self):
+        self.overall_score = self.code_quality + self.innovation + self.functionality + self.presentation
+        self.save()
+
+    def __str__(self):
+        return f"{self.team.name} - {self.event} - Score: {self.overall_score}"

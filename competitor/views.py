@@ -473,3 +473,12 @@ def ind_results(request):
 def ind_leaderboard(request,event_id):
     results = IndResult.objects.filter(event_id=event_id).order_by('-passed_testcases')
     return render(request, 'competitor/ind_leaderboard.html', {'results': results})
+
+def group_results(request):
+    group_events = GroupEvent.objects.all()
+    return render(request,'competitor/group_results.html',{"group_events":group_events})
+
+from host.models import HackathonGrading
+def group_leaderboard(request,event_id):
+    results = HackathonGrading.objects.filter(event_id=event_id).order_by('-overall_score')
+    return render(request, 'competitor/group_leaderboard.html', {'results': results})
