@@ -1,8 +1,7 @@
 {% extends "competitor/competitor_dashboard.html" %}
 {% block right_div %}
 
-<h1 style="text-align: center; color: black;">- Find Individual Events -</h1>
-<a href="{% url "competitor:ind_results" %}" class="btn-like" style="width:90%; display: block; margin: 0 auto;">CHECK RESULTS</a>
+<h1 style="text-align: center; color: black;">- RESULTS -</h1>
 
 {% if individual_events %}
     <div class="cards-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
@@ -22,10 +21,6 @@
                             <td style="padding: 8px;"><strong>Duration</strong></td>
                             <td style="padding: 8px;">: {{ event.time_duration }} minutes</td>
                         </tr>
-                        {% comment %} <tr>
-                            <td style="padding: 8px;"><strong>starting time</strong></td>
-                            <td style="padding: 8px;">: {{ event.start_datetime|date:"Y-m-d H:i" }}</td>
-                        </tr> {% endcomment %}
                         <tr>
                             <td style="padding: 8px;"><strong>Deadline</strong></td>
                             <td style="padding: 8px;">: {{ event.last_submission_datetime|date:"Y-m-d H:i" }}</td>
@@ -36,8 +31,8 @@
                         </tr>
                     </table>
                     <div style="text-align: center; margin-top: 16px;">
-                        <a href="{% url "competitor:ind_event_dashboard" event.id  %}" class="btn-like">
-                            PARTICIPATE
+                        <a href="{% url "competitor:ind_leaderboard" event.id %}" class="btn-like">
+                            Leaderboard
                         </a>                                    
                     </div>
                 </div>

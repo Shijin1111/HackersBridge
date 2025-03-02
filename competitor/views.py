@@ -462,3 +462,14 @@ def submit_event(request, event_id):
 
     return redirect('/competitor/find_individual_events/')
 
+
+def results(request):
+    return render(request, 'competitor/results.html') 
+
+def ind_results(request):
+    individual_events = IndividualEvent.objects.filter(indresult__user=request.user)
+    return render(request,'competitor/ind_results.html',{"individual_events":individual_events})
+
+def ind_leaderboard(request,event_id):
+    results = IndResult.objects.filter(event_id=event_id).order_by('-passed_testcases')
+    return render(request, 'competitor/ind_leaderboard.html', {'results': results})
