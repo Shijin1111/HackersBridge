@@ -284,7 +284,12 @@ IST = pytz.timezone('Asia/Kolkata')
 @login_required
 def ind_event_dashboard(request, event_id):
     event = get_object_or_404(IndividualEvent, id=event_id)
+    user = request.user
+    
+    has_attended = IndResult.objects.filter(user=user, event=event).exists()
 
+    if has_attended:
+        return render(request, 'competitor/ind_submitted.html')
     # Check if the user is already enrolled
     enrollment, created = IndividualEnrollment.objects.get_or_create(event=event, user=request.user)
 
@@ -296,14 +301,14 @@ def ind_event_dashboard(request, event_id):
     # Convert enrolled_at to IST
     enrolled_at_ist = enrollment.enrolled_at.astimezone(IST)
     event_end_time = enrolled_at_ist + timedelta(minutes=event.time_duration)
-
+    deadline = event.last_submission_datetime.astimezone(IST)
     current_time = now().astimezone(IST)
 
     print("Enrolled at (IST):", enrolled_at_ist)
     print("Current time (IST):", current_time)
     print("Event end time (IST):", event_end_time)
 
-    if current_time > event_end_time:
+    if current_time > event_end_time or current_time > deadline:
         print("Redirecting because event has ended.")
         messages.error(request, "The event has ended. You can no longer participate.")
         return redirect('competitor:event_expired_page')
@@ -437,8 +442,23 @@ def problem_details(request, problem_id):
 
 
 
+from django.db.models import Sum
+from host.models import IndividualEvent
+from .models import ProblemResult, IndResult
 
-
+@login_required
 def submit_event(request, event_id):
-    # Logic to mark event as completed
-    return redirect('/competitor/dashboard/')  # Redirect to main dashboard
+    event = get_object_or_404(IndividualEvent, id=event_id)
+    problems = event.problems.all()
+    user = request.user
+
+    passed_testcases = ProblemResult.objects.filter(user=user, problem__in=problems).aggregate(total_passed=Sum('testcases_passed'))['total_passed'] or 0
+
+    ind_result, created = IndResult.objects.update_or_create(
+        user=user,
+        event=event,
+        defaults={'passed_testcases': passed_testcases}
+    )
+
+    return redirect('/competitor/find_individual_events/')
+
