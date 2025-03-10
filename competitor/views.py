@@ -483,9 +483,10 @@ def group_leaderboard(request,event_id):
     results = HackathonGrading.objects.filter(event_id=event_id).order_by('-overall_score')
     return render(request, 'competitor/group_leaderboard.html', {'results': results})
 
-
-from .models import Team
+from .models import Team, ChatMessage
 
 def chatbox(request, team_id):
-    team = Team.objects.get(id=team_id)
-    return render(request, "competitor/chatbox.html", {"team": team})
+    team = get_object_or_404(Team, id=team_id)
+    messages = ChatMessage.objects.filter(team=team).order_by("timestamp")  # Get previous messages
+    return render(request, "competitor/chatbox.html", {"team": team, "messages": messages})
+

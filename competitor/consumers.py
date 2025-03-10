@@ -65,12 +65,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
 # chatbox
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+from asgiref.sync import sync_to_async
+from django.contrib.auth import get_user_model
+from .models import ChatMessage, Team
 
-class TeamChatConsumer(AsyncWebsocketConsumer):
+User = get_user_model()
+
+class HackathonChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.team_id = self.scope["url_route"]["kwargs"]["team_id"]
-        self.room_group_name = f"chat_team_{self.team_id}"
+        self.team_id = self.scope["url_route"]["kwargs"]["team_id"]  # Get team ID from URL
+        self.room_group_name = f"team_chat_{self.team_id}"
 
+        # Add user to WebSocket group
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
 
@@ -80,16 +86,32 @@ class TeamChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         message = data["message"]
-        username = self.scope["user"].get_full_name() or self.scope["user"].username  # Get user's real name
+        user = self.scope["user"]
 
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                "type": "chat_message",
-                "message": message,
-                "username": username,
-            },
-        )
+        if user.is_authenticated:
+            username = user.username
+            # Save message to database
+            await self.save_message(user, message)
+
+            # Send message to WebSocket group
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "chat_message",
+                    "message": message,
+                    "username": username,
+                },
+            )
 
     async def chat_message(self, event):
-        await self.send(text_data=json.dumps({"message": event["message"], "username": event["username"]}))
+        message = event["message"]
+        username = event["username"]
+
+        # Send message to WebSocket
+        await self.send(text_data=json.dumps({"message": message, "username": username}))
+
+    @sync_to_async
+    def save_message(self, user, message):
+        """Save message in the database"""
+        team = Team.objects.get(id=self.team_id)
+        ChatMessage.objects.create(team=team, user=user, message=message)
