@@ -70,9 +70,12 @@ class HackathonChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_group_name = "hackathon_chat"
 
-        # Add user to WebSocket group
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-        await self.accept()
+        # Check if user is authenticated before allowing connection
+        if self.scope["user"].is_authenticated:
+            await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+            await self.accept()
+        else:
+            await self.close()
 
     async def disconnect(self, close_code):
         # Remove user from WebSocket group
@@ -81,7 +84,7 @@ class HackathonChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         message = data["message"]
-        username = data["username"]
+        username = self.scope["user"].username  # Get username from authenticated user
 
         # Send message to WebSocket group
         await self.channel_layer.group_send(
@@ -89,9 +92,10 @@ class HackathonChatConsumer(AsyncWebsocketConsumer):
             {
                 "type": "chat_message",
                 "message": message,
-                "username": username,
+                "username": username,  # Now, username is fetched directly from the authenticated user
             },
         )
+
 
     async def chat_message(self, event):
         message = event["message"]
