@@ -55,8 +55,8 @@
     <script>
         const chatBox = document.getElementById("chat-box");
         const messageInput = document.getElementById("message");
-    
-        const socket = new WebSocket("ws://" + window.location.host + "/ws/hackathon_chat/");
+        const teamId = "{{ team.id }}";  // Get team ID from Django template
+        const socket = new WebSocket("ws://" + window.location.host + "/ws/chat/" + teamId + "/");
     
         socket.onmessage = function(event) {
             const data = JSON.parse(event.data);
@@ -66,17 +66,11 @@
     
         function sendMessage() {
             const message = messageInput.value.trim();
-            
             if (message !== "") {
-                const data = { message: message }; // No username here
-        
-                console.log("Sending message:", data); // Debugging line
-        
-                socket.send(JSON.stringify(data));
+                socket.send(JSON.stringify({ message: message }));
                 messageInput.value = "";
             }
         }
-        
     </script>
     
 </body>

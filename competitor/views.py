@@ -484,7 +484,8 @@ def group_leaderboard(request,event_id):
     return render(request, 'competitor/group_leaderboard.html', {'results': results})
 
 
-from django.shortcuts import render
+from .models import Team
 
-def chatbox(request):
-    return render(request, "competitor/chatbox.html")
+def chatbox(request, team_id):
+    team = Team.objects.get(id=team_id)
+    return render(request, "competitor/chatbox.html", {"team": team})
