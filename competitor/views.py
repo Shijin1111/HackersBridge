@@ -482,3 +482,9 @@ from host.models import HackathonGrading
 def group_leaderboard(request,event_id):
     results = HackathonGrading.objects.filter(event_id=event_id).order_by('-overall_score')
     return render(request, 'competitor/group_leaderboard.html', {'results': results})
+
+
+from django.shortcuts import render
+
+def chatbox(request):
+    return render(request, "competitor/chatbox.html")

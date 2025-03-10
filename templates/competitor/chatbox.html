@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbox</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #232d3b;
+            color: white;
+            text-align: center;
+        }
+
+        .chat-container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            color: black;
+        }
+
+        .chat-box {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 5px;
+        }
+
+        .send-btn {
+            background-color: rgb(255, 119, 70);
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <h2>Hackathon Chat</h2>
+        <div class="chat-box" id="chat-box"></div>
+        <input type="text" id="username" placeholder="Enter your name">
+        <input type="text" id="message" placeholder="Type a message">
+        <button class="send-btn" onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById("chat-box");
+        const messageInput = document.getElementById("message");
+        const usernameInput = document.getElementById("username");
+
+        const socket = new WebSocket("ws://" + window.location.host + "/ws/hackathon_chat/");
+        
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            chatBox.innerHTML += `<p><strong>${data.username}:</strong> ${data.message}</p>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        };
+
+        function sendMessage() {
+            const message = messageInput.value;
+            const username = usernameInput.value || "Anonymous";
+
+            if (message.trim() !== "") {
+                socket.send(JSON.stringify({ message: message, username: username }));
+                messageInput.value = "";
+            }
+        }
+    </script>
+
+</body>
+</html>
