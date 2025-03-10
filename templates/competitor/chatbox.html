@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #232d3b;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -15,7 +15,7 @@
         }
 
         .chat-container {
-            width: 400px;
+            width: 600px;
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -23,7 +23,7 @@
         }
 
         .chat-header {
-            background: #007bff;
+            background: rgb(255, 119, 70);
             color: white;
             padding: 10px;
             text-align: center;
@@ -32,26 +32,50 @@
         }
 
         #chat-box {
-            height: 300px;
+            height: 350px;
             overflow-y: auto;
             padding: 10px;
             border-bottom: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            background: #f9f9f9;
         }
 
         .message {
-            padding: 8px;
-            margin: 5px 0;
-            border-radius: 5px;
+            display: inline-block; /* Ensures the message doesn't take full width */
+            max-width: 80%;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 10px;
+            word-wrap: break-word;
+            white-space: normal; /* Ensures text wraps inside the box */
         }
-
+        
         .message strong {
-            color: #007bff;
+            font-size: 12px;
+            margin-right: 5px; /* Adds space between username and message */
+            display: inline; /* Keeps username on the same line */
+            vertical-align: middle; /* Aligns username with message */
         }
-
+        
+        .message.sent {
+            background-color: rgb(255, 119, 70);
+            color: white;
+            align-self: flex-end;
+            text-align: left; /* Ensures message text is aligned properly */
+        }
+        
+        .message.received {
+            background-color: #4a5769;
+            color: white;
+            align-self: flex-start;
+            text-align: left;
+        }
+        
         .input-area {
             display: flex;
             padding: 10px;
-            background: #f4f4f4;
+            background: #232d3b;
         }
 
         #message {
@@ -63,7 +87,7 @@
         }
 
         button {
-            background: #007bff;
+            background: rgb(255, 119, 70);
             color: white;
             border: none;
             padding: 8px 15px;
@@ -73,47 +97,72 @@
         }
 
         button:hover {
-            background: #0056b3;
+            background: rgb(230, 100, 50);
         }
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 5px;
+            object-fit: cover;
+            vertical-align: middle;
+        }
+        
     </style>
 </head>
 <body>
 
 <div class="chat-container">
     <div class="chat-header">
-        Team {{ team.name }} Chat
+         {{ team.name }} - ChatRoom
     </div>
 
     <div id="chat-box">
         {% for msg in messages %}
-            <p class="message"><strong>{{ msg.user.username }}:</strong> {{ msg.message }}</p>
+        <p class="message {% if msg.user == request.user %}sent{% else %}received{% endif %}">
+            <img src="https://ui-avatars.com/api/?name={{ msg.user.username }}&background=random" class="avatar">
+            <strong>{{ msg.user.username }}</strong>: {{ msg.message }}
+        </p>
+        
         {% endfor %}
     </div>
-
+    
     <div class="input-area">
         <input type="text" id="message" placeholder="Type your message..." />
         <button onclick="sendMessage()">Send</button>
     </div>
 </div>
-    <script>
-        const chatBox = document.getElementById("chat-box");
-        const messageInput = document.getElementById("message");
-        const socket = new WebSocket("ws://" + window.location.host + "/ws/chat/{{ team.id }}/");
-    
-        socket.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-            chatBox.innerHTML += `<p><strong>${data.username}:</strong> ${data.message}</p>`;
-            chatBox.scrollTop = chatBox.scrollHeight;
-        };
-    
-        function sendMessage() {
-            const message = messageInput.value;
-    
-            if (message.trim() !== "") {
-                socket.send(JSON.stringify({ message: message }));
-                messageInput.value = "";
-            }
+
+<script>
+    const chatBox = document.getElementById("chat-box");
+    const messageInput = document.getElementById("message");
+    const socket = new WebSocket("ws://" + window.location.host + "/ws/chat/{{ team.id }}/");
+
+    socket.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        const messageElement = document.createElement("p");
+        messageElement.classList.add("message");
+
+        if (data.username === "{{ request.user.username }}") {
+            messageElement.classList.add("sent");  // Sent messages appear on right
+        } else {
+            messageElement.classList.add("received");  // Received messages appear on left
         }
-    </script>
+
+        messageElement.innerHTML = `<strong>${data.username}</strong> ${data.message}`;
+        chatBox.appendChild(messageElement);
+        chatBox.scrollTop = chatBox.scrollHeight;  // Auto-scroll to latest message
+    };
+
+    function sendMessage() {
+        const message = messageInput.value.trim();
+
+        if (message !== "") {
+            socket.send(JSON.stringify({ message: message }));
+            messageInput.value = "";
+        }
+    }
+</script>
+
 </body>
 </html>
