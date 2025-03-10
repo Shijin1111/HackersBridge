@@ -61,6 +61,12 @@ def live_events(request):
     )
     return render(request, 'host/live_events.html', {'live_events': live_events})
 
+from .models import GroupEvent
+
+def view_event(request, event_id):
+    event = get_object_or_404(GroupEvent, id=event_id)
+    return render(request, 'host/view_event.html', {'event': event})
+
 
 @login_required
 def view_submissions(request, event_id):

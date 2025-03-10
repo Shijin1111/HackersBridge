@@ -231,9 +231,9 @@
                                 <p><strong>Submission Deadline:</strong> {{ event.last_submission_datetime|date:"Y-m-d H:i" }}</p>
                                 {% comment %} <p><strong>creator</strong> {{ event.created_by }}</p> {% endcomment %}
                                 <div style="text-align: center; margin-top: 16px;">
-                                    <a href="#" class="btn-like" >
-                                        View Details
-                                    </a>
+                                    <a href="{% url 'host:view_submissions' event.id %}" class="btn-like">
+                                        View submissions
+                                    </a>  
                                 </div>
                             </div>
                         </div>
