@@ -18,9 +18,14 @@
                             No live link provided.
                         {% endif %}
                     </p>
+                    <div style="display: flex; justify-content: space-around; margin-top: 16px;"> 
+                        <div >
+                            <a href="{% url 'host:download_file' submission.files.first.id %}" class="btn-like">Download Project</a>
+                        </div>
 
-                    <div style="text-align: center; margin-top: 16px;">
-                        <a href="{% url 'host:download_file' submission.files.first.id %}" class="btn-like">Download Files</a>
+                        <div >
+                            <a href="{% url 'host:grade_project' submission.id %}" class="btn-like">Grade Project</a>
+                        </div>
                     </div>
                 </div>
             </div>

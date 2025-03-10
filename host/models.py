@@ -99,13 +99,13 @@ class HackathonGrading(models.Model):
     event = models.ForeignKey(GroupEvent, on_delete=models.CASCADE, related_name="grades")
     code_quality = models.IntegerField(default=0)  # Score out of 10
     innovation = models.IntegerField(default=0)    # Score out of 10
-    Security = models.IntegerField(default=0)      # Score out of 10
+    security = models.IntegerField(default=0)      # Score out of 10
     frontend = models.IntegerField(default=0)  # Score out of 10
     functionality = models.IntegerField(default=0) # Score out of 10
     overall_score = models.IntegerField(default=0) # Can be calculated from other fields
 
     def calculate_total_score(self):
-        self.overall_score = self.code_quality + self.innovation + self.functionality + self.presentation
+        self.overall_score = self.code_quality + self.innovation + self.functionality + self.security + self.frontend
         self.save()
 
     def __str__(self):

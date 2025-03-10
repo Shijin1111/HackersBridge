@@ -102,3 +102,26 @@ def create_individual_event(request):
         form = IndividualEventForm()
     
     return render(request, 'host/create_individual_event.html', {'form': form})
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import HackathonGrading, ProjectSubmission
+from .forms import HackathonGradingForm
+
+def grade_project(request, submission_id):
+    submission = get_object_or_404(ProjectSubmission, id=submission_id)
+    
+    # Check if a grade already exists for this submission
+    grading, created = HackathonGrading.objects.get_or_create(team=submission.team, event=submission.event)
+
+    if request.method == "POST":
+        form = HackathonGradingForm(request.POST, instance=grading)
+        if form.is_valid():
+            form.save()
+            grading.calculate_total_score()  # Update overall score
+            return redirect('host:view_submissions', event_id=submission.event.id)
+    else:
+        form = HackathonGradingForm(instance=grading)
+
+    return render(request, "host/grade_project.html", {"form": form, "submission": submission})

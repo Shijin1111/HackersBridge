@@ -58,3 +58,12 @@ class IndividualEventForm(forms.ModelForm):
             'last_submission_datetime': forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-control"}),
             'time_duration': forms.NumberInput(attrs={"class": "form-control", "placeholder": "Enter Duration in Minutes"}),
         }
+
+
+from django import forms
+from .models import HackathonGrading
+
+class HackathonGradingForm(forms.ModelForm):
+    class Meta:
+        model = HackathonGrading
+        fields = ['code_quality', 'innovation', 'security', 'frontend', 'functionality']
