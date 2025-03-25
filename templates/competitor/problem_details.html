@@ -185,6 +185,11 @@
             });
         });
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+
 </head>
 <body>
     <h1>{{ problem.title }}</h1>
@@ -243,5 +248,98 @@
             {% endif %}
         </div>
     </div>
+    {% comment %} <div class="text-center mt-3">
+        <video id="videoElement" width="480" height="360" autoplay style=" border: 2px solid white; border-radius: 10px;"></video>
+    </div>
+     {% endcomment %}
+    <script>
+        let isMonitoring = false;
+        let faceDetected = false;
+        let unauthorizedObjectDetected = false;
+        let videoStream = null;
+        let logArray = [];
+        
+        document.getElementById("toggleVideoBtn").addEventListener("click", () => {
+            const video = document.getElementById("videoElement");
+        
+            if (video.style.display === "none") {
+                video.style.display = "block";
+                document.getElementById("toggleVideoBtn").textContent = "Hide Camera";
+            } else {
+                video.style.display = "none";
+                document.getElementById("toggleVideoBtn").textContent = "Show Camera";
+            }
+        });
+
+        async function startMonitoring() {
+            if (isMonitoring) return;
+            isMonitoring = true;
+    
+            const video = document.getElementById("videoElement");
+            const faceModel = await blazeface.load();
+            const objectModel = await cocoSsd.load();
+    
+            navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
+                videoStream = stream;
+                video.srcObject = stream;
+                video.play();
+            }).catch(function (err) {
+                alert("Error accessing webcam: " + err);
+            });
+    
+            video.addEventListener("loadeddata", async () => {
+                while (isMonitoring) {
+                    let logMessage = "";
+                    const faces = await faceModel.estimateFaces(video, false);
+    
+                    if (faces.length === 0 && faceDetected) {
+                        logMessage = "No face detected! Please stay in front of the camera.";
+                        logActivity(logMessage, "high");
+                        alert(logMessage);
+                        faceDetected = false;
+                    } else if (faces.length > 0) {
+                        faceDetected = true;
+                    }
+    
+                    const predictions = await objectModel.detect(video);
+                    let foundUnauthorizedObject = false;
+                    predictions.forEach((prediction) => {
+                        if (prediction.class === "cell phone" || prediction.class === "laptop") {
+                            foundUnauthorizedObject = true;
+                            if (!unauthorizedObjectDetected) {
+                                logMessage = `Warning: Unauthorized object detected: ${prediction.class}`;
+                                logActivity(logMessage, "high");
+                                alert(logMessage);
+                                unauthorizedObjectDetected = true;
+                            }
+                        }
+                    });
+    
+                    if (!foundUnauthorizedObject) unauthorizedObjectDetected = false;
+                    await tf.nextFrame();
+                }
+            });
+        }
+    
+        function stopMonitoring() {
+            isMonitoring = false;
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+            document.getElementById("videoElement").srcObject = null;
+        }
+    
+        function logActivity(message, severity) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}`;
+            logArray.push(logEntry);
+            console.log(logEntry); // Keeping logs in console (you can store them elsewhere)
+        }
+    
+        document.addEventListener("DOMContentLoaded", () => {
+            startMonitoring(); // Automatically start monitoring when the page loads
+        });
+        
+    </script>
 </body>
 </html>

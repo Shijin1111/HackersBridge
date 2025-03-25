@@ -6,7 +6,7 @@ User = get_user_model()
 
 class TeamCreateForm(forms.ModelForm):
     members = forms.ModelMultipleChoiceField(
-        queryset=User.objects.filter(user_type='competitor'),  # Filter competitors
+        queryset=User.objects.filter(user_type='competitor'),  
         required=False,
         widget=forms.CheckboxSelectMultiple  # Use checkboxes for user selection
     )

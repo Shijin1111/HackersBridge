@@ -2,7 +2,7 @@
 
 {% block right_div %}
 <h1 style="color:black;text-align: center;">- create team -</h1>
-  <form method="post">
+  <form method="post" style="color:black;">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-primary">Create Team</button>
