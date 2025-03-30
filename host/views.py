@@ -31,6 +31,7 @@ def create_group_event(request):
                 last_submission_datetime=form.cleaned_data["last_submission_datetime"],
                 evaluation_criteria=form.cleaned_data["evaluation_criteria"],
                 created_by=request.user,  
+                entry_fee=form.cleaned_data["entry_fee"],
             )
             return redirect("host:host_dashboard")  
         else:

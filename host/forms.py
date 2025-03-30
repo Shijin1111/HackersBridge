@@ -34,7 +34,10 @@ class GroupEventForm(forms.Form):
         label="Evaluation Criteria",
         widget=forms.Textarea(attrs={"class": "form-control", "placeholder": "Enter Evaluation Criteria"}),
     )
-
+    entry_fee = forms.IntegerField(
+        label="Entry Fee",
+        widget=forms.NumberInput(attrs={"class": "form-control", "placeholder": "If Free Event Then Enter Zero"}),
+    )
 
 # -------------------------------------------------------------------------------------------------
 
