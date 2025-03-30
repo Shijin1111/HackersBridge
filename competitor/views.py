@@ -137,6 +137,7 @@ from django.contrib import messages
 from host.models import GroupEvent, TeamEnrollment, IndividualEvent
 from .models import Team
 
+@login_required
 def enroll_in_event(request, event_id):
     event = get_object_or_404(GroupEvent, id=event_id)
     user_teams = Team.objects.filter(team_admin=request.user)  # Teams created by the user
@@ -154,8 +155,31 @@ def enroll_in_event(request, event_id):
             messages.success(request, f"{team.name} successfully enrolled in {event.hackathon_name}!")
         return redirect('competitor:find_group_events')
 
-    return render(request, 'competitor/enroll_in_event.html', {'event': event, 'user_teams': user_teams})
+    return render(request, 'competitor/enroll_in_event.html', {'event': event, 'user_teams': user_teams ,"user_id": request.user.id })
 
+
+import razorpay
+from django.conf import settings
+from django.shortcuts import render, get_object_or_404
+
+def booking(request, event_id, user_id):
+    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+    event = get_object_or_404(GroupEvent, id=event_id)
+    payment_data = {
+        "amount": int(event.entry_fee * 100),  # Convert to paise
+        "currency": "INR",
+        "receipt": f"order_rcpt_{event_id}_{user_id}",
+        "payment_capture": 1
+    }
+    order = client.order.create(data=payment_data)
+
+    context = {
+        "order_id": order["id"],
+        "razorpay_key": settings.RAZORPAY_KEY_ID,
+        "amount": event.entry_fee,
+        "event": event,
+    }
+    return render(request, "competitor/payment.html", context)
 
 def enrolled_hackathons(request):
     # Get all teams the user is part of (either as team_admin or member)

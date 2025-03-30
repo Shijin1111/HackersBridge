@@ -29,6 +29,12 @@
                                         <td style="padding: 8px;"><strong>Max Team Size</strong></td>
                                         <td style="padding: 8px;">: {{ event.max_team_size }}</td>
                                     </tr>
+                                    {% if  event.entry_fee != 0 %}
+                                    <tr>
+                                        <td style="padding: 8px;"><strong>Entry Fee</strong></td>
+                                        <td style="padding: 8px;">: {{ event.entry_fee }}</td>
+                                    </tr>
+                                    {%endif%}
                                     <tr>
                                         <td style="padding: 8px;"><strong>Deadline</strong></td>
                                         <td style="padding: 8px;">: {{ event.last_submission_datetime|date:"Y-m-d H:i" }}</td>

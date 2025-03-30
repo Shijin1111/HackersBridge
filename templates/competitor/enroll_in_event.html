@@ -13,6 +13,8 @@
     <button type="submit" class="btn-like">Enroll Team</button>
 </form>
 
+<a href="{% url "competitor:booking" event.id user.id %}"  class="chat-button">MAKE PAYMENT</a>
+
 {% if not user_teams %}
     <p>You don't have any teams to enroll. <a href="{% url 'competitor:create_team' %}">Create a team</a>.</p>
 {% endif %}
