@@ -11,7 +11,8 @@ class GroupEvent(models.Model):
     last_submission_datetime = models.DateTimeField()
     evaluation_criteria = models.TextField()
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="group_events")
-
+    entry_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    
     def __str__(self):
         return self.hackathon_name
 
