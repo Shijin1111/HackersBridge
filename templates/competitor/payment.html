@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Payment - Rental</title>
+    <title>Secure Payment </title>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         body {
@@ -74,14 +74,14 @@
 <script>
     var options = {
         "key": "{{ razorpay_key }}",
-        "amount": "{{ property.price }}" * 100,
+        "amount": "{{ event.entry_fee }}" * 100,
         "currency": "INR",
-        "name": "Rental Payment",
-        "description": "Payment for property booking",
+        "name": "{{ event.hackathon_name }}",
+        "description": "Payment for hackathon entry",
         "order_id": "{{ order_id }}",
         "handler": function (response){
             alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
-            window.location.href = "/properties/payment-success/";
+            window.location.href = "/competitor/enroll_in_event/{{ event.id }}/";
         },
         "prefill": {
             "name": "{{ user.username }}",
