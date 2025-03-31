@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Payment </title>
+    <title>Secure Payment</title>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         body {
@@ -74,14 +74,33 @@
 <script>
     var options = {
         "key": "{{ razorpay_key }}",
-        "amount": "{{ event.entry_fee }}" * 100,
+        "amount": {{ event.entry_fee }} * 100,  // Convert amount to paise
         "currency": "INR",
         "name": "{{ event.hackathon_name }}",
         "description": "Payment for hackathon entry",
         "order_id": "{{ order_id }}",
         "handler": function (response){
-            alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
-            window.location.href = "/competitor/enroll_in_event/{{ event.id }}/";
+            fetch("{% url 'competitor:verify_payment' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    "razorpay_payment_id": response.razorpay_payment_id,
+                    "razorpay_order_id": response.razorpay_order_id,
+                    "razorpay_signature": response.razorpay_signature,
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Payment Successful!");
+                    window.location.href = "{% url 'competitor:enroll_in_event' event.id %}";
+                } else {
+                    alert("Payment verification failed!");
+                }
+            });
         },
         "prefill": {
             "name": "{{ user.username }}",
@@ -98,5 +117,6 @@
         e.preventDefault();
     }
 </script>
+
 </body>
 </html>

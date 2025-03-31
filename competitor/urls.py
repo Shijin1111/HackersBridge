@@ -12,6 +12,7 @@ urlpatterns = [
     path('find_individual_events/',views.find_individual_events,name='find_individual_events'),
     path('enroll_in_event/<int:event_id>/', views.enroll_in_event, name='enroll_in_event'),
     path("booking/<int:event_id>/<int:user_id>/", views.booking, name="booking"),
+    path("verify-payment/", views.verify_payment, name="verify_payment"),
     path('enrolled_hackathons/', views.enrolled_hackathons, name='enrolled_hackathons'),
     path('event/<int:event_id>/team/<int:team_id>/', views.event_details, name='event_details'),
     path('event/<int:event_id>/submit_project/', views.submit_project, name='submit_project'),

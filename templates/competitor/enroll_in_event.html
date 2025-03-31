@@ -10,10 +10,15 @@
             <option value="{{ team.id }}">{{ team.name }}</option>
         {% endfor %}
     </select>
-    <button type="submit" class="btn-like">Enroll Team</button>
-</form>
 
-<a href="{% url "competitor:booking" event.id user.id %}"  class="chat-button">MAKE PAYMENT</a>
+    {% if event.entry_fee > 0 and not user_payment_done %}
+        <!-- Show Payment Button if Entry Fee Exists and Not Paid -->
+        <a href="{% url 'competitor:booking' event.id user.id %}" class="chat-button">MAKE PAYMENT</a>
+    {% else %}
+        <!-- Show Enroll Button if Payment is Done OR No Entry Fee -->
+        <button type="submit" class="btn-like">Enroll Team</button>
+    {% endif %}
+</form>
 
 {% if not user_teams %}
     <p>You don't have any teams to enroll. <a href="{% url 'competitor:create_team' %}">Create a team</a>.</p>

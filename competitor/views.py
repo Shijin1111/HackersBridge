@@ -136,11 +136,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from host.models import GroupEvent, TeamEnrollment, IndividualEvent
 from .models import Team
+from competitor.models import Payment  # Import your Payment model
 
 @login_required
 def enroll_in_event(request, event_id):
     event = get_object_or_404(GroupEvent, id=event_id)
     user_teams = Team.objects.filter(team_admin=request.user)  # Teams created by the user
+
+    # Check if the user has paid
+    user_payment = Payment.objects.filter(user=request.user, event=event, status="SUCCESS").exists()
 
     if request.method == 'POST':
         team_id = request.POST.get('team_id')
@@ -155,16 +159,23 @@ def enroll_in_event(request, event_id):
             messages.success(request, f"{team.name} successfully enrolled in {event.hackathon_name}!")
         return redirect('competitor:find_group_events')
 
-    return render(request, 'competitor/enroll_in_event.html', {'event': event, 'user_teams': user_teams ,"user_id": request.user.id })
+    return render(request, 'competitor/enroll_in_event.html', {
+        'event': event,
+        'user_teams': user_teams,
+        'user_id': request.user.id,
+        'user_payment_done': user_payment  # Pass payment status to the template
+    })
 
 
 import razorpay
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404
+from accounts.models import CustomUser
 
 def booking(request, event_id, user_id):
     client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
     event = get_object_or_404(GroupEvent, id=event_id)
+    user = get_object_or_404(CustomUser.objects.all(), id=user_id)
     payment_data = {
         "amount": int(event.entry_fee * 100),  # Convert to paise
         "currency": "INR",
@@ -173,6 +184,14 @@ def booking(request, event_id, user_id):
     }
     order = client.order.create(data=payment_data)
 
+    payment = Payment.objects.create(
+        user=user,
+        event=event,
+        amount=event.entry_fee,
+        status="PENDING",  # Initially set as pending
+        transaction_id=order["id"]
+    )
+    
     context = {
         "order_id": order["id"],
         "razorpay_key": settings.RAZORPAY_KEY_ID,
@@ -180,6 +199,43 @@ def booking(request, event_id, user_id):
         "event": event,
     }
     return render(request, "competitor/payment.html", context)
+
+
+from django.http import JsonResponse
+from competitor.models import Payment
+import razorpay
+
+def verify_payment(request):
+    if request.method == "POST":
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+        # Get data from Razorpay response
+        razorpay_payment_id = request.POST.get("razorpay_payment_id")
+        razorpay_order_id = request.POST.get("razorpay_order_id")
+        razorpay_signature = request.POST.get("razorpay_signature")
+
+        try:
+            # Verify the payment signature
+            params_dict = {
+                "razorpay_payment_id": razorpay_payment_id,
+                "razorpay_order_id": razorpay_order_id,
+                "razorpay_signature": razorpay_signature,
+            }
+
+            client.utility.verify_payment_signature(params_dict)
+
+            # Update payment status in the database
+            payment = Payment.objects.get(transaction_id=razorpay_order_id)
+            payment.status = "SUCCESS"
+            payment.save()
+
+            return JsonResponse({"success": True, "message": "Payment verified successfully!"})
+
+        except razorpay.errors.SignatureVerificationError:
+            return JsonResponse({"success": False, "message": "Payment verification failed!"})
+
+    return JsonResponse({"success": False, "message": "Invalid request!"})
+
 
 def enrolled_hackathons(request):
     # Get all teams the user is part of (either as team_admin or member)
