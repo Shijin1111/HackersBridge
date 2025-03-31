@@ -13,7 +13,7 @@
 
     {% if event.entry_fee > 0 and not user_payment_done %}
         <!-- Show Payment Button if Entry Fee Exists and Not Paid -->
-        <a href="{% url 'competitor:booking' event.id user.id %}" class="chat-button">MAKE PAYMENT</a>
+        <a href="{% url 'competitor:booking' event.id user.id %}" class="btn-like">MAKE PAYMENT</a>
     {% else %}
         <!-- Show Enroll Button if Payment is Done OR No Entry Fee -->
         <button type="submit" class="btn-like">Enroll Team</button>
