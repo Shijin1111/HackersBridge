@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -248,6 +249,23 @@
             {% endif %}
         </div>
     </div>
+
+        <!-- Video Controls (optional) -->
+    <div class="text-center mt-3">
+        <button id="toggleVideoBtn" class="btn btn-primary" style="display: none;">Show Camera</button>
+    </div>
+
+    <!-- Hidden Camera Feed -->
+    <div class="text-center mt-3">
+        <video id="videoElement" width="480" height="360" autoplay style="display: none; border: 2px solid white; border-radius: 10px;"></video>
+    </div>
+
+    <!-- Load Monitoring Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+    <script src="{% static 'js/monitoring.js' %}"></script>
+
     {% comment %} <div class="text-center mt-3">
         <video id="videoElement" width="480" height="360" autoplay style=" border: 2px solid white; border-radius: 10px;"></video>
     </div>

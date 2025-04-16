@@ -499,7 +499,7 @@ def problem_details(request, problem_id):
         for filename in ['code.cpp', 'code.out', 'Main.java', 'Main.class']:
             if os.path.exists(filename):
                 os.remove(filename)
-        # **Save the result if "Save Code" button was clicked**
+        # Save the result if "Save Code" button was clicked
         if 'save_result' in request.POST:
                 problem_result, created = ProblemResult.objects.get_or_create(
                     user=request.user,
