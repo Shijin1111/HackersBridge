@@ -96,6 +96,7 @@ python manage.py runserver
 ```
 
 7. **Open in browser**
-
+```
 Visit: http://127.0.0.1:8000/
+```
 
