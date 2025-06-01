@@ -69,38 +69,33 @@ Hackersbridge aims to:
    ```bash
    git clone https://github.com/your-username/hackersbridge.git
    cd hackersbridge
-Create and activate a virtual environment
+2. **Create and activate a virtual environment**
 
-bash
-Copy
-Edit
-python -m venv env
-source env/bin/activate  # On Windows: env\Scripts\activate
-Install dependencies
-
-bash
-Copy
-Edit
+  ```bash
+  python -m venv env
+  source env/bin/activate  # On Windows: env\Scripts\activate
+  ```
+3. **Install dependencies**
+```bash
 pip install -r requirements.txt
-Run migrations
+```
 
-bash
-Copy
-Edit
+4. **Run migrations**
+```bash
 python manage.py migrate
-Create a superuser
-
-bash
-Copy
-Edit
+```
+5. **Create a superuser**
+```bash
 python manage.py createsuperuser
-Start the development server
+```
 
-bash
-Copy
-Edit
+6. **Start the development server**
+
+```bash
 python manage.py runserver
-Open in browser
+```
+
+7. **Open in browser**
 
 Visit: http://127.0.0.1:8000/
 
