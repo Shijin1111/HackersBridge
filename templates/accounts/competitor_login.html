@@ -16,28 +16,42 @@
             font-family: Arial, Helvetica, sans-serif;
             color: white;
             font-family: "Lucida Console", "Courier New", monospace;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
         }
 
         .image-container {
-            position: absolute;
-            width: 100%;
+            width: 70%;
             height: 100%;
-            background: url("{% static '/images/anforderungs-projekt.svg' %}") no-repeat ;
-            background-size: contain; /* Ensures the image covers the entire area */
+            background: url("{% static '/images/anforderungs-projekt.svg' %}") no-repeat center center;
+            {% comment %} background-size: cover; {% endcomment %}
+            {% comment %} background-attachment: fixed; {% endcomment %}
+            border-radius: 20px;
+            {% comment %} border: solid rgb(211, 155, 0); {% endcomment %}
+            margin-right: 10px;
         }
 
-        .content {
-            position: absolute;
-            top: 44%;
-            left: 78%;
-            width: 300px;
-            height: 324px;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            padding: 20px;
-            border : solid rgb(255, 119, 70);
-            border-radius: 20px;
-        }
+.content-wrapper {
+    width: 30%;
+    display: flex;
+    align-items: center;       /* vertically center */
+    justify-content: center;   /* horizontally center */
+}
+
+.content {
+    width: 40vw; /* 40% of screen width */
+    text-align: center;
+    padding: 20px;
+    border: solid rgb(255, 119, 70);
+    border-radius: 20px;
+}
+
+
 
         h2 {
             font-family: "Lucida Console", "Courier New", monospace;
@@ -120,7 +134,11 @@
     <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 <body>
-    <div class="image-container">
+    <div class="container">
+    <div class="image-container"></div>
+
+    <!-- Wrapper to help vertical centering -->
+    <div class="content-wrapper">
         <div class="content">
             <h2>Login</h2>
             {% if error %}
@@ -136,5 +154,8 @@
             <a href="{% url "competitor_signup" %}" class="btn-signup">Register</a>
         </div>
     </div>
+</div>
+
+        
 </body>
 </html>
