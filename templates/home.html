@@ -113,6 +113,41 @@
             font-family: 'Moonwalk', sans-serif; 
             color: #ff7746;
         }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .image-container {
+                margin-top: 30px;
+            }
+
+            .image-container img {
+                max-width: 400px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1em;
+                padding: 0 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                font-size: 0.95em;
+            }
+        }
+
     </style>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
